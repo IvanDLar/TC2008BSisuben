@@ -18,7 +18,9 @@ class RandomAgent(Agent):
         unique_id: Agent's ID 
         direction: Randomly chosen direction chosen from one of eight directions
     """
+
     def __init__(self, unique_id, model):
+        self.condition = "Clean"
         """
         Creates a new random agent.
         Args:
@@ -27,32 +29,55 @@ class RandomAgent(Agent):
         """
         super().__init__(unique_id, model)
         self.direction = 4
+        self.steps_taken = 0
 
     def move(self):
         """ 
         Determines if the agent can move in the direction that was chosen
         """
-        possible_steps = self.model.grid.get_neighborhood(
-            self.pos,
-            moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-            include_center=True) 
-        
-        # Checks which grid cells are empty
-        freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
+        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True)
+        box = []
+   
+        # Check if there is a box tile in any of the 8 tiles that surrounds the agent, if there is add to auxiliary list
+        for i in listOfNeighbours:
+            if isinstance(i, BoxAgent):
+                box.append(i)
+    
+        #If there is an element in the list move to the coordinates and remove the first box agent in the list, if ther is another moove to the next dir neighbour
+        if(len(box) > 0):
+            next_move = box[0].pos
+            self.model.grid.move_agent(self, next_move)
+            self.model.grid
+        elif(len(box) <= 0):
+            possible_steps = self.model.grid.get_neighborhood(
+                self.pos,
+                moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+                include_center=True) 
+            
+            # Checks which grid cells are empty
+            freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
+
+            next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
+            next_move = self.random.choice(next_moves)
+
+            # Now move:
+            if self.random.random() < 0.5:
+                self.model.grid.move_agent(self, next_move)
+                self.steps_taken+=1
 
         # If the cell is empty, moves the agent to that cell; otherwise, it stays at the same position
-        if freeSpaces[self.direction]:
-            self.model.grid.move_agent(self, possible_steps[self.direction])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.direction]}; direction {self.direction}")
-        else:
-            print(f"No se puede mover de {self.pos} en esa direccion.")
+        # if freeSpaces[self.direction]:
+        #     self.model.grid.move_agent(self, possible_steps[self.direction])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.direction]}; direction {self.direction}")
+        # else:
+        #     print(f"No se puede mover de {self.pos} en esa direccion.")
 
     def step(self):
         """ 
         Determines the new direction it will take, and then moves
         """
-        self.direction = self.random.randint(0,8)
-        print(f"Agente: {self.unique_id} movimiento {self.direction}")
+        # self.direction = self.random.randint(0,8)
+        # print(f"Agente: {self.unique_id} movimiento {self.direction}")
         self.move()
 
 class ObstacleAgent(Agent):
@@ -65,6 +90,16 @@ class ObstacleAgent(Agent):
     def step(self):
         pass   
 
+class BoxAgent(Agent):
+    """
+    Boxnt. Just to add boxes to the grid.
+    """
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+
+    def step(self):
+        pass  
+
 class RandomModel(Model):
     """ 
     Creates a new model with random agents.
@@ -72,15 +107,16 @@ class RandomModel(Model):
         N: Number of agents in the simulation
         height, width: The size of the grid to model
     """
-    def __init__(self, N, width, height):
+    def __init__(self, N, B, width, height):
         self.num_agents = N
+        self.num_boxes = B
         self.grid = Grid(width,height,torus = False) 
         self.schedule = RandomActivation(self)
         self.running = True 
 
         # Creates the border of the grid
         border = [(x,y) for y in range(height) for x in range(width) if y in [0, height-1] or x in [0, width - 1]]
-
+        
         for pos in border:
             obs = ObstacleAgent(pos, self)
             self.schedule.add(obs)
@@ -96,6 +132,17 @@ class RandomModel(Model):
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(a, pos)
+
+        # Add the boxes to a random empty grid cell
+        for i in range(self.num_boxes):
+            b = BoxAgent(i+2000, self) 
+            self.schedule.add(b)
+
+            pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+            pos = pos_gen(self.grid.width, self.grid.height)
+            while (not self.grid.is_cell_empty(pos)):
+                pos = pos_gen(self.grid.width, self.grid.height)
+            self.grid.place_agent(b, pos)
 
     def step(self):
         '''Advance the model by one step.'''
