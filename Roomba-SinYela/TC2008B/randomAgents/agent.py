@@ -16,7 +16,8 @@ class RandomAgent(Agent):
             model: Model reference for the agent
         """
         super().__init__(unique_id, model)
-        self.direction = 4
+        #Top Down Right Left
+        self.directions = [4, 6, 3, 1]
         self.steps_taken = 0
 
     def move(self):
@@ -27,28 +28,29 @@ class RandomAgent(Agent):
         listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
 
         dirt = []
-        endPoints = []
+        endPoints = self.model.endPointsM[1]
+        # print(endPoints)
        
         # Check if there is a dirt tile in any of the 8 tiles that surrounds the agent, if there is add to auxiliary list
-        for i in listOfNeighbours:
-            if isinstance(i, EndPointAgent):
-                endPoints.append(i)
+        # for i in listOfNeighbours:
+        #     if isinstance(i, EndPointAgent):
+        #         endPoints.append(i)
 
-            if isinstance(i, DirtAgent):
-                dirt.append(i)
+        #     if isinstance(i, DirtAgent):
+        #         dirt.append(i)
         
-        if(len(endPoints) > 0):
-            next_move = endPoints[0].pos
-            self.model.grid.move_agent(self, next_move)
-            #Initialice the move to station state and within we will modify the state of the robot
-            if(self.pos == endPoints[0].pos):
-                self.model.grid.remove_agent(self)
+        # if(len(endPoints) > 0):
+        #     next_move = endPoints[0].pos
+        #     self.model.grid.move_agent(self, next_move)
+        #     #Initialice the move to station state and within we will modify the state of the robot
+        #     if(self.pos == endPoints[0].pos):
+        #         self.model.grid.remove_agent(self)
 
-        elif(len(dirt) <= 0):
-            possible_steps = self.model.grid.get_neighborhood(
-                self.pos,
-                moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-                ) 
+        # elif(len(dirt) <= 0):
+        #     possible_steps = self.model.grid.get_neighborhood(
+        #         self.pos,
+        #         moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+        #         ) 
             
         # #If there is an element in the list move to the coordinates and remove the first dirt agent in the list, if ther is another moove to the next dir neighbour
         # if(len(dirt) > 0):
@@ -63,15 +65,35 @@ class RandomAgent(Agent):
         #         include_center=True) 
             
             # Checks which grid cells are empty
-            freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
 
-            next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
-            next_move = self.random.choice(next_moves)
+        #Check if x of agent is bigger or smaller than the endpoints x
+        if(self.pos[0] > endPoints[0]):
+            self.directions[2]
+        elif(self.pos[0] < endPoints[0]):
+            self.directions[0]
+        #Check if z of agent is bigger or smaller than the endpoints z
+        if(self.pos[1] > endPoints[1]):
+            self.directions[2]
+        elif(self.pos[1] < endPoints[1]):
+            self.directions[0]
+
+        possible_steps = self.model.grid.get_neighborhood(
+            self.pos,
+            moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+            include_center=True) 
+
+        freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
+
+        next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
+        next_move = self.random.choice(next_moves)
+
+        
+        
 
             # Now move:
-            if self.random.random() < 0.1:
-                self.model.grid.move_agent(self, next_move)
-                self.steps_taken+=1
+        if self.random.random() < 0.1:
+            self.model.grid.move_agent(self, next_move)
+            self.steps_taken+=1
 
         # If the cell is empty, moves the agent to that cell; otherwise, it stays at the same position
         # # if freeSpaces[self.direction]:

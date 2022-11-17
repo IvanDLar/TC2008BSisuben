@@ -20,6 +20,7 @@ class RandomModel(Model):
         self.schedule = RandomActivationByType(self)
         self.running = True 
         self.max_steps = 100
+        self.endPointsM = []
 
         self.grid_size = (width) * (height)
 
@@ -44,8 +45,11 @@ class RandomModel(Model):
         for i in range(self.num_agents):
             b = RandomAgent(i+1000, self) 
             self.schedule.add(b)
-
-            pos = (1,1)
+            
+            pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+            pos = pos_gen(self.grid.width, self.grid.height)
+            while (not self.grid.is_cell_empty(pos)):
+                pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(b, pos)
         
         # Add the dirt to a random empty grid cell
@@ -59,7 +63,7 @@ class RandomModel(Model):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(c, pos)
             
-        endPointsM = []
+        
         # Manually add the checkpoints to the grid 
         for i in range(self.num_points):
             d = EndPointAgent(i+4000, self) 
@@ -69,7 +73,7 @@ class RandomModel(Model):
             pos = pos_gen(self.grid.width, self.grid.height)
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
-            endPointsM.append(pos)
+            self.endPointsM.append(pos)
             self.grid.place_agent(d, pos)
         
         self.datacollector.collect(self)
