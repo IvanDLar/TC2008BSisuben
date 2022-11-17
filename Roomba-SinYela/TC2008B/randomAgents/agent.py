@@ -23,24 +23,44 @@ class RandomAgent(Agent):
         """ 
         Determines if the agent can move in the direction that was chosen
         """
-        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True)
+        # Detect the types of neighbours the agent has
+        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
+
         dirt = []
+        endPoints = []
    
         # Check if there is a dirt tile in any of the 8 tiles that surrounds the agent, if there is add to auxiliary list
         for i in listOfNeighbours:
+            if isinstance(i, EndPointAgent):
+                endPoints.append(i)
+
             if isinstance(i, DirtAgent):
                 dirt.append(i)
     
-        #If there is an element in the list move to the coordinates and remove the first dirt agent in the list, if ther is another moove to the next dir neighbour
-        if(len(dirt) > 0):
-            next_move = dirt[0].pos
+        if(len(endPoints) > 0):
+            next_move = endPoints[0].pos
             self.model.grid.move_agent(self, next_move)
-            self.model.grid.remove_agent(dirt[0])
+            #Initialice the move to station state and within we will modify the state of the robot
+            if(self.pos == endPoints[0].pos):
+                self.model.grid.remove_agent(self)
+
         elif(len(dirt) <= 0):
             possible_steps = self.model.grid.get_neighborhood(
                 self.pos,
-                moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-                include_center=True) 
+                moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+                ) 
+            
+        # #If there is an element in the list move to the coordinates and remove the first dirt agent in the list, if ther is another moove to the next dir neighbour
+        # if(len(dirt) > 0):
+        #     next_move = dirt[0].pos
+        #     self.model.grid.move_agent(self, next_move)
+        #     #Initialice the move to station state and within we will modify the state of the robot
+
+        # elif(len(dirt) <= 0):
+        #     possible_steps = self.model.grid.get_neighborhood(
+        #         self.pos,
+        #         moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+        #         include_center=True) 
             
             # Checks which grid cells are empty
             freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
@@ -54,11 +74,11 @@ class RandomAgent(Agent):
                 self.steps_taken+=1
 
         # If the cell is empty, moves the agent to that cell; otherwise, it stays at the same position
-        # if freeSpaces[self.direction]:
-        #     self.model.grid.move_agent(self, possible_steps[self.direction])
-        #     print(f"Se mueve de {self.pos} a {possible_steps[self.direction]}; direction {self.direction}")
-        # else:
-        #     print(f"No se puede mover de {self.pos} en esa direccion.")
+        # # if freeSpaces[self.direction]:
+        # #     self.model.grid.move_agent(self, possible_steps[self.direction])
+        # #     print(f"Se mueve de {self.pos} a {possible_steps[self.direction]}; direction {self.direction}")
+        # # else:
+        # #     print(f"No se puede mover de {self.pos} en esa direccion.")
 
     def step(self):
         """ 
@@ -68,7 +88,6 @@ class RandomAgent(Agent):
         # print(f"Agente: {self.unique_id} movimiento {self.direction}")
         self.move()
 
-        
 
 class ObstacleAgent(Agent):
     """
@@ -83,6 +102,17 @@ class ObstacleAgent(Agent):
 class DirtAgent(Agent):
     """
     Obstacle agent. Just to add obstacles to the grid.
+    """
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.condition = "Dirt"
+
+    def step(self):
+        pass  
+    
+class EndPointAgent(Agent):
+    """
+    Endpoint agent. Just to add a few endpoints to the grid.
     """
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)

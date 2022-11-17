@@ -2,7 +2,7 @@ from mesa import Model, agent
 from mesa.time import RandomActivationByType
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
-from agent import RandomAgent, ObstacleAgent, DirtAgent
+from agent import RandomAgent, ObstacleAgent, DirtAgent, EndPointAgent
 
 class RandomModel(Model):
     """ 
@@ -11,10 +11,11 @@ class RandomModel(Model):
         N: Number of agents in the simulation
         height, width: The size of the grid to model
     """
-    def __init__(self, N, O, T, width, height):
+    def __init__(self, N, O, T, P, width, height):
         self.num_agents = N
         self.num_obstacles = O
         self.num_trash = T
+        self.num_points = P
         self.grid = MultiGrid(width,height,torus = False) 
         self.schedule = RandomActivationByType(self)
         self.running = True 
@@ -28,7 +29,7 @@ class RandomModel(Model):
             "Dirt": lambda x: x.schedule.get_type_count(DirtAgent),
            "Clean": lambda y: y.grid_size - y.schedule.get_type_count(DirtAgent)
         })
-
+        
         # Add the OBSTACLE to a random empty grid cell
         for i in range(self.num_obstacles):
             a = ObstacleAgent(i+10000, self) 
@@ -58,6 +59,17 @@ class RandomModel(Model):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(c, pos)
             
+        # Manually add the checkpoints to the grid 
+        for i in range(self.num_points):
+            d = EndPointAgent(i+4000, self) 
+            self.schedule.add(d)
+
+            pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+            pos = pos_gen(self.grid.width, self.grid.height)
+            while (not self.grid.is_cell_empty(pos)):
+                pos = pos_gen(self.grid.width, self.grid.height)
+            self.grid.place_agent(d, pos)
+
         self.datacollector.collect(self)
         
         

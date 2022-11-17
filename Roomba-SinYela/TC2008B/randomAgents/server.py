@@ -1,4 +1,4 @@
-from model import RandomModel, ObstacleAgent, DirtAgent
+from model import RandomModel, ObstacleAgent, EndPointAgent ,DirtAgent
 from mesa.visualization.modules import CanvasGrid, BarChartModule, PieChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
@@ -12,6 +12,12 @@ def agent_portrayal(agent):
                  "Color": "red",
                  "r": 0.5}
 
+    portrayal2 = {"Shape": "square",
+                 "Filled": "true",
+                 "Layer": 2,
+                 "Color": "red",
+                 "r": 0.5}                 
+
     if (isinstance(agent, ObstacleAgent)):
         portrayal["Color"] = "grey"
         portrayal["Layer"] = 1
@@ -22,11 +28,17 @@ def agent_portrayal(agent):
         portrayal["Layer"] = 1
         portrayal["r"] = 0.2
 
+    if (isinstance(agent, EndPointAgent)):
+        portrayal["Color"] = "purple"
+        portrayal["Layer"] = 0
+        portrayal["r"] = 1
+
     return portrayal
 
 model_params = {"N": UserSettableParameter("slider", "Number of roombas", 5, 1, 20, 1)
                 ,"T": UserSettableParameter("slider", "Number of Dirt Tiles", 10, 1, 25, 1)
                 , "O":UserSettableParameter("slider", "Number of Obstacle ", 7, 1, 20, 1)
+                , "P":UserSettableParameter("slider", "Number of End Points ", 2, 1, 20, 1)
                 , "width":10
                 , "height":10}
 

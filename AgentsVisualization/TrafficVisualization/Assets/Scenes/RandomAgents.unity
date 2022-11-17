@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -332,8 +332,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agentPrefab: {fileID: 701828089398414538, guid: c6fd3d894e2d60e4880ee651a9ab1b42, type: 3}
   obstaclePrefab: {fileID: 6891723511095266445, guid: 0dcc2cb62bf64b34e9ad78d0149e330a, type: 3}
+  boxPrefab: {fileID: 961990229689801968, guid: ee469e15406ccf8b5b59106051caa9b4, type: 3}
   floor: {fileID: 1555382164}
   NAgents: 10
+  NBoxes: 4
   width: 28
   height: 28
   timeToUpdate: 2
@@ -443,7 +445,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1555382164}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
