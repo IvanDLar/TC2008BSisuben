@@ -38,7 +38,7 @@ def agent_portrayal(agent):
 model_params = {"N": UserSettableParameter("slider", "Number of roombas", 5, 1, 20, 1)
                 ,"T": UserSettableParameter("slider", "Number of Dirt Tiles", 10, 1, 25, 1)
                 , "O":UserSettableParameter("slider", "Number of Obstacle ", 7, 1, 20, 1)
-                , "P":UserSettableParameter("slider", "Number of Obstacle ", 7, 1, 20, 1)
+                , "P":UserSettableParameter("slider", "Number of End Points ", 2, 1, 20, 1)
                 , "width":10
                 , "height":10}
 

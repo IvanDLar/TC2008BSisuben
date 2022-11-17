@@ -29,7 +29,7 @@ class RandomModel(Model):
             "Dirt": lambda x: x.schedule.get_type_count(DirtAgent),
            "Clean": lambda y: y.grid_size - y.schedule.get_type_count(DirtAgent)
         })
-
+        
         # Add the OBSTACLE to a random empty grid cell
         for i in range(self.num_obstacles):
             a = ObstacleAgent(i+10000, self) 
@@ -60,7 +60,7 @@ class RandomModel(Model):
             self.grid.place_agent(c, pos)
             
         # Manually add the checkpoints to the grid 
-        for i in range(self.num_agents):
+        for i in range(self.num_points):
             d = EndPointAgent(i+4000, self) 
             self.schedule.add(d)
 
