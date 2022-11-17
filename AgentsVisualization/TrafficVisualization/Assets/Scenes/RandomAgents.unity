@@ -333,9 +333,11 @@ MonoBehaviour:
   agentPrefab: {fileID: 701828089398414538, guid: c6fd3d894e2d60e4880ee651a9ab1b42, type: 3}
   obstaclePrefab: {fileID: 6891723511095266445, guid: 0dcc2cb62bf64b34e9ad78d0149e330a, type: 3}
   boxPrefab: {fileID: 961990229689801968, guid: ee469e15406ccf8b5b59106051caa9b4, type: 3}
+  endPointPrefab: {fileID: 8102729382312259521, guid: ec03db3fda9c46458bf4fb4f61cc11bd, type: 3}
   floor: {fileID: 1555382164}
   NAgents: 10
   NBoxes: 4
+  NEndPoints: 3
   width: 28
   height: 28
   timeToUpdate: 2
