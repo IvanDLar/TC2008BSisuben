@@ -28,7 +28,7 @@ class RandomAgent(Agent):
 
         dirt = []
         endPoints = []
-   
+       
         # Check if there is a dirt tile in any of the 8 tiles that surrounds the agent, if there is add to auxiliary list
         for i in listOfNeighbours:
             if isinstance(i, EndPointAgent):
@@ -36,7 +36,7 @@ class RandomAgent(Agent):
 
             if isinstance(i, DirtAgent):
                 dirt.append(i)
-    
+        
         if(len(endPoints) > 0):
             next_move = endPoints[0].pos
             self.model.grid.move_agent(self, next_move)
