@@ -25,7 +25,7 @@ class RandomAgent(Agent):
         Determines if the agent can move in the direction that was chosen
         """
         # Detect the types of neighbours the agent has
-        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
+        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 1)
 
         dirt = []
         endPoints = self.model.endPointsM[1]
@@ -66,28 +66,30 @@ class RandomAgent(Agent):
             
             # Checks which grid cells are empty
 
-        #Check if x of agent is bigger or smaller than the endpoints x
-        if(self.pos[0] > endPoints[0]):
-            self.directions[2]
-        elif(self.pos[0] < endPoints[0]):
-            self.directions[0]
-        #Check if z of agent is bigger or smaller than the endpoints z
-        if(self.pos[1] > endPoints[1]):
-            self.directions[2]
-        elif(self.pos[1] < endPoints[1]):
-            self.directions[0]
+        
 
         possible_steps = self.model.grid.get_neighborhood(
             self.pos,
             moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-            include_center=True) 
+            ) 
 
         freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
 
         next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
         next_move = self.random.choice(next_moves)
 
-        
+        #Check if x of agent is bigger or smaller than the endpoints x
+        if(self.pos[0] > endPoints[0]):
+            print("x > end")
+            self.directions[2]
+        elif(self.pos[0] < endPoints[0]):
+            self.directions[0]
+        #Check if z of agent is bigger or smaller than the endpoints z
+        if(self.pos[1] > endPoints[1]):
+            print("z > end")
+            self.directions[1]
+        elif(self.pos[1] < endPoints[1]):
+            self.directions[3]
         
 
             # Now move:
