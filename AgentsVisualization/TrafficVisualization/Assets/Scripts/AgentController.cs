@@ -40,16 +40,17 @@ public class AgentController : MonoBehaviour
     string getAgentsEndpoint = "/getAgents";
     string getObstaclesEndpoint = "/getObstacles";
     string getBoxesEndpoint = "/getBoxes";
+    string getEndpointsEndpoint = "/getEndPoints";
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
-    AgentsData agentsData, obstacleData, boxData;
+    AgentsData agentsData, obstacleData, boxData, endPointData;
     Dictionary<string, GameObject> agents;
     Dictionary<string, Vector3> prevPositions, currPositions;
 
     bool updated = false, started = false;
 
-    public GameObject agentPrefab, obstaclePrefab, boxPrefab, floor;
-    public int NAgents, NBoxes, width, height;
+    public GameObject agentPrefab, obstaclePrefab, boxPrefab, endPointPrefab, floor;
+    public int NAgents, NBoxes, NEndPoints, width, height;
     public float timeToUpdate = 5.0f;
     private float timer, dt;
 
@@ -57,6 +58,7 @@ public class AgentController : MonoBehaviour
     {
         agentsData = new AgentsData();
         obstacleData = new AgentsData();
+        endPointData = new AgentsData();
         boxData = new AgentsData();
 
         prevPositions = new Dictionary<string, Vector3>();
@@ -122,6 +124,7 @@ public class AgentController : MonoBehaviour
 
         form.AddField("NAgents", NAgents.ToString());
         form.AddField("NBoxes", NBoxes.ToString());
+        form.AddField("NEndPoints", NEndPoints.ToString());
         form.AddField("width", width.ToString());
         form.AddField("height", height.ToString());
 
@@ -141,6 +144,7 @@ public class AgentController : MonoBehaviour
             StartCoroutine(GetAgentsData());
             StartCoroutine(GetObstacleData());
             StartCoroutine(GetBoxData());
+            StartCoroutine(GetEndPointData());
         }
     }
 
@@ -213,6 +217,26 @@ public class AgentController : MonoBehaviour
             foreach(AgentData box in boxData.positions)
             {
                 Instantiate(boxPrefab, new Vector3(box.x, box.y, box.z), Quaternion.identity);
+            }
+        }
+    }
+
+    IEnumerator GetEndPointData() 
+    {
+        UnityWebRequest www = UnityWebRequest.Get(serverUrl + getEndpointsEndpoint);
+        yield return www.SendWebRequest();
+ 
+        if (www.result != UnityWebRequest.Result.Success)
+            Debug.Log(www.error);
+        else 
+        {
+            endPointData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
+
+            Debug.Log(endPointData.positions);
+
+            foreach(AgentData box in endPointData.positions)
+            {
+                Instantiate(endPointPrefab, new Vector3(box.x, box.y, box.z), Quaternion.identity);
             }
         }
     }

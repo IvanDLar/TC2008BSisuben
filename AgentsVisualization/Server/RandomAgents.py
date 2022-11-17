@@ -100,6 +100,16 @@ class BoxAgent(Agent):
     def step(self):
         pass  
 
+class EndPointAgent(Agent):
+    """
+    Endpoint agent. Just to add a few endpoints to the grid.
+    """
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+
+    def step(self):
+        pass  
+
 class RandomModel(Model):
     """ 
     Creates a new model with random agents.
@@ -107,9 +117,10 @@ class RandomModel(Model):
         N: Number of agents in the simulation
         height, width: The size of the grid to model
     """
-    def __init__(self, N, B, width, height):
+    def __init__(self, N, B, P, width, height):
         self.num_agents = N
         self.num_boxes = B
+        self.num_points = P
         self.grid = Grid(width,height,torus = False) 
         self.schedule = RandomActivation(self)
         self.running = True 
@@ -143,6 +154,17 @@ class RandomModel(Model):
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(b, pos)
+
+        # Add the checkpoints to the grid 
+        for i in range(self.num_points):
+            d = EndPointAgent(i+4000, self) 
+            self.schedule.add(d)
+
+            pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+            pos = pos_gen(self.grid.width, self.grid.height)
+            while (not self.grid.is_cell_empty(pos)):
+                pos = pos_gen(self.grid.width, self.grid.height)
+            self.grid.place_agent(d, pos)
 
     def step(self):
         '''Advance the model by one step.'''
