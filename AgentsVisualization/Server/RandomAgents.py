@@ -35,7 +35,7 @@ class RandomAgent(Agent):
         """ 
         Determines if the agent can move in the direction that was chosen
         """
-        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True)
+        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = False)
         box = []
    
         # Check if there is a box tile in any of the 8 tiles that surrounds the agent, if there is add to auxiliary list
@@ -51,7 +51,7 @@ class RandomAgent(Agent):
         elif(len(box) <= 0):
             possible_steps = self.model.grid.get_neighborhood(
                 self.pos,
-                moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+                moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
                 include_center=True) 
             
             # Checks which grid cells are empty
@@ -64,6 +64,7 @@ class RandomAgent(Agent):
             if self.random.random() < 0.5:
                 self.model.grid.move_agent(self, next_move)
                 self.steps_taken+=1
+                
 
         # If the cell is empty, moves the agent to that cell; otherwise, it stays at the same position
         # if freeSpaces[self.direction]:
@@ -165,6 +166,8 @@ class RandomModel(Model):
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(d, pos)
+
+            print("Endpoint",pos)
 
     def step(self):
         '''Advance the model by one step.'''
