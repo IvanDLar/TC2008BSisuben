@@ -27,7 +27,7 @@ class RandomAgent(Agent):
         Determines if the agent can move in the direction that was chosen
         """
         # Detect the types of neighbours the agent has
-        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
+        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 1)
 
         dirt = []
         endPointsM = self.model.endPointsM
@@ -135,15 +135,44 @@ class RandomAgent(Agent):
         #         include_center=True) 
             
             # Checks which grid cells are empty
-            #freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
 
-            # next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
-            # next_move = self.random.choice(next_moves)
+        
 
-            # # Now move:
-            # if self.random.random() < 0.1:
-            #     self.model.grid.move_agent(self, next_move)
-            #     self.steps_taken+=1
+        possible_steps = self.model.grid.get_neighborhood(
+            self.pos,
+            moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+            ) 
+
+        freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
+
+        next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
+        next_move = self.random.choice(next_moves)
+
+        #Check if x of agent is bigger or smaller than the endpoints x
+        if(self.pos[0] > endPoints[0]):
+            print("x > end")
+            self.directions[2]
+        elif(self.pos[0] < endPoints[0]):
+            self.directions[0]
+        #Check if z of agent is bigger or smaller than the endpoints z
+        if(self.pos[1] > endPoints[1]):
+            print("z > end")
+            self.directions[1]
+        elif(self.pos[1] < endPoints[1]):
+            self.directions[3]
+        
+
+            # Now move:
+        if self.random.random() < 0.1:
+            self.model.grid.move_agent(self, next_move)
+            self.steps_taken+=1
+
+        # If the cell is empty, moves the agent to that cell; otherwise, it stays at the same position
+        # # if freeSpaces[self.direction]:
+        # #     self.model.grid.move_agent(self, possible_steps[self.direction])
+        # #     print(f"Se mueve de {self.pos} a {possible_steps[self.direction]}; direction {self.direction}")
+        # # else:
+        # #     print(f"No se puede mover de {self.pos} en esa direccion.")
 
     def step(self):
         """ 
