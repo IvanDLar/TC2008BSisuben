@@ -1,0 +1,9 @@
+# Tarea M4 Graficos
+
+## Instrucciones
+
+La tarea se encuentra en el el proyecto de agents visualization, usmaos una escena llamada "Tarea Gil M4".
+
+Los modelos de nuestros autos se encuentran en la carpeta de /modelos/TareaGilCars/
+
+Usamos materiales directamente desde la creación de los modelos en blender, y también usamos materiales que importamos dentro de unity.
