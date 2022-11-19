@@ -43,36 +43,64 @@ class RandomAgent(Agent):
         # Checks which grid cells are empty
         freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
 
-        # If the cell is empty, moves the agent to that cell; otherwise, it stays at the same position
-        if freeSpaces[self.directions[0]]:
+        #If the element is blovked to the top move to the right, if it is blocked to the right, 
+        #move towards the bottom 
+        if not freeSpaces[self.directions[0]]:
+            if freeSpaces[self.directions[1]]:
+                self.model.grid.move_agent(self, possible_steps[self.directions[1]])
+                print(f"Se mueve de {self.pos} a {possible_steps[self.directions[1]]}; direction self.directions[1]")
+            elif freeSpaces[self.directions[2]]:
+                self.model.grid.move_agent(self, possible_steps[self.directions[2]])
+                print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[3]")
+        else:
             self.model.grid.move_agent(self, possible_steps[self.directions[0]])
             print(f"Se mueve de {self.pos} a {possible_steps[self.directions[0]]}; direction self.directions[0]")
-        elif freeSpaces[self.directions[1]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[1]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[1]]}; direction self.directions[1]")
+               
+        # if ( position.x > destination.x )
+        # position.x--;
+        # else if ( position.x < destination.x )
+        # position.x++;
+        # // update y position
+        # if ( position.y > destination.y )
+        # position.y--;
+        # else if ( position.y < destination.y )
+        # position.y++;
         
-        if freeSpaces[self.directions[1]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[1]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[1]]}; direction self.directions[1]")
-        elif freeSpaces[self.directions[2]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[2]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[2]")
+        #        elif freeSpaces[self.directions[1]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[1]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[1]]}; direction self.directions[1]")
+        # elif freeSpaces[self.directions[2]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[2]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[2]")
+        # elif freeSpaces[self.directions[3]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[3]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[3]]}; direction self.directions[3]")
         
-        if freeSpaces[self.directions[3]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[3]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[3]]}; direction self.directions[3]")
-        elif freeSpaces[self.directions[0]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[0]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[0]]}; direction self.directions[0]")
+        # if freeSpaces[self.directions[1]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[1]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[1]]}; direction self.directions[1]")
+        # elif freeSpaces[self.directions[2]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[2]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[2]")
+        # elif freeSpaces[self.directions[2]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[2]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[2]")
+        
+        # if freeSpaces[self.directions[3]]:
+        #     print("Moving down")
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[3]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[3]]}; direction self.directions[3]")
+        # elif freeSpaces[self.directions[0]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[0]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[0]]}; direction self.directions[0]")
                         
-        if freeSpaces[self.directions[2]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[2]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[2]")
-        elif freeSpaces[self.directions[3]]:
-            self.model.grid.move_agent(self, possible_steps[self.directions[3]])
-            print(f"Se mueve de {self.pos} a {possible_steps[self.directions[3]]}; direction self.directions[3]")
-                            
-       
+        # if freeSpaces[self.directions[2]]:
+        #     print("Moving down")
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[2]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[2]]}; direction self.directions[2]")
+        # elif freeSpaces[self.directions[3]]:
+        #     self.model.grid.move_agent(self, possible_steps[self.directions[3]])
+        #     print(f"Se mueve de {self.pos} a {possible_steps[self.directions[3]]}; direction self.directions[3]")
         # Check if there is a dirt tile in any of the 8 tiles that surrounds the agent, if there is add to auxiliary list
         # for i in listOfNeighbours:
         #     if isinstance(i, EndPointAgent):
