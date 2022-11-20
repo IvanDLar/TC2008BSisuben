@@ -49,7 +49,7 @@ class RandomModel(Model):
             pos = pos_gen(self.grid.width, self.grid.height)
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
-            self.grid.place_agent(a, pos)
+            self.grid.place_agent(b, pos)
 
         # Add the agent to the 1,1 cell
         for i in range(self.num_agents):

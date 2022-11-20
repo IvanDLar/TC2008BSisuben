@@ -30,6 +30,7 @@ class RandomAgent(Agent):
         listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 1)
 
         dirt = []
+        endPoints = self.model.endPointsM
         endPointsM = self.model.endPointsM
 
         
