@@ -6,9 +6,9 @@ from flask import Flask, request, jsonify
 from RandomAgents import *
 
 # Size of the board:
-number_agents = 10
+number_agents = 1
 number_boxes = 15;
-number_end_points = 5;
+number_end_points = 2;
 width = 28
 height = 28
 randomModel = None

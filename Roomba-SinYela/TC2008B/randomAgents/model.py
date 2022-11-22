@@ -2,7 +2,7 @@ from mesa import Model, agent
 from mesa.time import RandomActivationByType
 from mesa.space import MultiGrid
 from mesa.datacollection import DataCollector
-from agent import RandomAgent, ObstacleAgent, DirtAgent, EndPointAgent
+from agent import RandomAgent, ObstacleAgent, BoxAgent, EndPointAgent
 
 class RandomModel(Model):
     """ 
@@ -27,8 +27,8 @@ class RandomModel(Model):
         self.datacollector = DataCollector( 
         agent_reporters={"Steps": lambda a: a.steps_taken if isinstance(a, RandomAgent) else 0},
         model_reporters={
-            "Dirt": lambda x: x.schedule.get_type_count(DirtAgent),
-           "Clean": lambda y: y.grid_size - y.schedule.get_type_count(DirtAgent)
+            "Box": lambda x: x.schedule.get_type_count(BoxAgent),
+           "Clean": lambda y: y.grid_size - y.schedule.get_type_count(BoxAgent)
         })
         
         # Creates the border of the grid height x width. The loop repeats while y and x are in range
@@ -53,7 +53,7 @@ class RandomModel(Model):
         
         # Add the dirt to a random empty grid cell
         for i in range(self.num_trash):
-            c = DirtAgent(i+5000, self) 
+            c = BoxAgent(i+5000, self) 
             self.schedule.add(c)
 
             pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
@@ -83,7 +83,7 @@ class RandomModel(Model):
         self.schedule.step()
         self.datacollector.collect(self)
 
-        if (self.schedule.get_type_count(DirtAgent) != 0):
+        if (self.schedule.get_type_count(BoxAgent) != 0):
             self.running = True
 
         else:
