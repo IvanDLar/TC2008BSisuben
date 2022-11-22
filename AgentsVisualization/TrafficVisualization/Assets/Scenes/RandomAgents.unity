@@ -335,9 +335,9 @@ MonoBehaviour:
   boxPrefab: {fileID: 961990229689801968, guid: ee469e15406ccf8b5b59106051caa9b4, type: 3}
   endPointPrefab: {fileID: 8102729382312259521, guid: ec03db3fda9c46458bf4fb4f61cc11bd, type: 3}
   floor: {fileID: 1555382164}
-  NAgents: 10
-  NBoxes: 4
-  NEndPoints: 3
+  NAgents: 1
+  NBoxes: 10
+  NEndPoints: 2
   width: 28
   height: 28
   timeToUpdate: 2
