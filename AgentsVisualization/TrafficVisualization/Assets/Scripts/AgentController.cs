@@ -115,8 +115,8 @@ public class AgentController : MonoBehaviour
         else 
         {
             StartCoroutine(GetAgentsData());
-            StartCoroutine(GetAgentsBox());
-            StartCoroutine(getAgentsEndpoint()); //Usar contador para poder apilar las cajas
+            StartCoroutine(GetBoxData());
+            StartCoroutine(GetEndPointData()); //Usar contador para poder apilar las cajas
         }
     }
 
@@ -213,8 +213,7 @@ public class AgentController : MonoBehaviour
         else 
         {
             boxData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
-
-            Debug.Log(boxData.positions);
+            Debug.Log(boxData);
 
             foreach(AgentData box in boxData.positions)
             {
