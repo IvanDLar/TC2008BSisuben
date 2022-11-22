@@ -115,6 +115,8 @@ public class AgentController : MonoBehaviour
         else 
         {
             StartCoroutine(GetAgentsData());
+            StartCoroutine(GetAgentsBox());
+            StartCoroutine(getAgentsEndpoint()); //Usar contador para poder apilar las cajas
         }
     }
 
