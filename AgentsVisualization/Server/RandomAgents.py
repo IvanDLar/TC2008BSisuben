@@ -43,7 +43,7 @@ class RandomAgent(Agent):
             if isinstance(i, BoxAgent):
                 box.append(i)
     
-        #If there is an element in the list move to the coordinates and remove the first box agent in the list, if ther is another moove to the next dir neighbour
+        #If there is an element in the list move to the coordinates and remove the first box agent in the list, if there is another moove to the next dir neighbour
         if(len(box) > 0):
             next_move = box[0].pos
             self.model.grid.move_agent(self, next_move)

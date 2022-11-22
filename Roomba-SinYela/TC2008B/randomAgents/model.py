@@ -20,6 +20,7 @@ class RandomModel(Model):
         self.schedule = RandomActivationByType(self)
         self.running = True 
         self.max_steps = 100
+        self.endPointsM = []
 
         self.grid_size = (width) * (height)
 
@@ -30,9 +31,19 @@ class RandomModel(Model):
            "Clean": lambda y: y.grid_size - y.schedule.get_type_count(DirtAgent)
         })
         
-        # Add the OBSTACLE to a random empty grid cell
-        for i in range(self.num_obstacles):
-            a = ObstacleAgent(i+10000, self) 
+        # Creates the border of the grid height x width. The loop repeats while y and x are in range
+        border = [(x,y) for y in range(height) for x in range(width) if y in [0, height - 1] or x in [0, width - 1]]
+
+        # Place an obstacle in every position in the border
+        for pos in border:
+            obs = ObstacleAgent(pos, self)
+            # self.schedule.add(obs)
+            self.grid.place_agent(obs, pos)
+
+        # Add the agent to the 1,1 cell
+        for i in range(self.num_agents):
+            b = RandomAgent(i+1000, self) 
+            self.schedule.add(b)
 
             pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
             pos = pos_gen(self.grid.width, self.grid.height)
@@ -44,8 +55,11 @@ class RandomModel(Model):
         for i in range(self.num_agents):
             b = RandomAgent(i+1000, self) 
             self.schedule.add(b)
-
-            pos = (1,1)
+            
+            pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+            pos = pos_gen(self.grid.width, self.grid.height)
+            while (not self.grid.is_cell_empty(pos)):
+                pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(b, pos)
         
         # Add the dirt to a random empty grid cell
@@ -59,6 +73,7 @@ class RandomModel(Model):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(c, pos)
             
+        
         # Manually add the checkpoints to the grid 
         for i in range(self.num_points):
             d = EndPointAgent(i+4000, self) 
@@ -68,8 +83,9 @@ class RandomModel(Model):
             pos = pos_gen(self.grid.width, self.grid.height)
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
+            self.endPointsM.append(pos)
             self.grid.place_agent(d, pos)
-
+        
         self.datacollector.collect(self)
         
         
