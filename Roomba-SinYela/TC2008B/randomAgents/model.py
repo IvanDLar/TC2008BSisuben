@@ -21,6 +21,8 @@ class RandomModel(Model):
         self.running = True 
         self.max_steps = 100
         self.endPointsM = []
+        self.endPointAgents = []
+        self.endPointDict = {}
 
         self.grid_size = (width) * (height)
 
@@ -73,10 +75,13 @@ class RandomModel(Model):
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.endPointsM.append(pos)
+            self.endPointAgents.append(d)
+            #Relate the position of a point to the eal specific object in the model
+            self.endPointDict = dict(zip(self.endPointAgents, self.endPointsM))
             self.grid.place_agent(d, pos)
-        
+        print(self.endPointDict)
         self.datacollector.collect(self)
-        
+
         
     def step(self):
         '''Advance the model by one step.'''

@@ -33,7 +33,12 @@ class RandomAgent(Agent):
         listOfNeighboursPoints = self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 1)
         isNear = []
         endPointsM = self.model.endPointsM
+        endPointDictionary = self.model.endPointDict
         
+        #Get the object of an endpoint using its value and get limit
+        getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == endPointsM[0]}
+        print("Endpoint dicitonary: ", next(iter(getEndPointKey)).limit)
+
         #If there are any boxes around the robot, add them to the list
         boxes = [box_agent for box_agent in self.model.grid.get_neighbors(
             self.pos, moore=True
@@ -137,7 +142,20 @@ class RandomAgent(Agent):
             elif (len(isNear) > 0 and self.pos == isNear[0].pos):
                 #Stop Moving (later drop the box)
                 print("Has Box State: ", self.hasBox)
+
+                #Get the endPoint object
+                getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == isNear[0].pos}
                 self.hasBox = False
+                if((next(iter(getEndPointKey)).limit) > 0):
+                    next(iter(getEndPointKey)).limit = next(iter(getEndPointKey)).limit - 1
+                
+                #If the endpoint reaches the limit remove it from the possible endpoints
+                if(next(iter(getEndPointKey)).limit <= 0):
+                    endPointsM.pop(endPointsM.index(isNear[0].pos))
+                    for key, value in dict(endPointDictionary).items():
+                        if value == isNear[0].pos:
+                            del endPointDictionary[key]
+
             
             #If the robot is not inside the point nor near
             else:
@@ -186,41 +204,6 @@ class RandomAgent(Agent):
                     self.model.grid.move_agent(self, possible_steps[self.directions[0]]) 
                     print("#When Y is the same but there is an obstacle to the right and to the left, move up")
 
-            # if(len(endPoints) > 0):
-            #     next_move = endPoints[0].pos
-            #     self.model.grid.move_agent(self, next_move)
-            #     #Initialice the move to station state and within we will modify the state of the robot
-            #     if(self.pos == endPoints[0].pos):
-            #         self.model.grid.remove_agent(self)
-
-            # elif(len(dirt) <= 0):
-            #     possible_steps = self.model.grid.get_neighborhood(
-            #         self.pos,
-            #         moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-            #         ) 
-                
-            # #If there is an element in the list move to the coordinates and remove the first dirt agent in the list, if ther is another moove to the next dir neighbour
-            # if(len(dirt) > 0):
-            #     next_move = dirt[0].pos
-            #     self.model.grid.move_agent(self, next_move)
-            #     #Initialice the move to station state and within we will modify the state of the robot
-
-            # elif(len(dirt) <= 0):
-            #     possible_steps = self.model.grid.get_neighborhood(
-            #         self.pos,
-            #         moore=False, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-            #         include_center=True) 
-                
-                # Checks which grid cells are empty
-                #freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
-
-                # next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
-                # next_move = self.random.choice(next_moves)
-
-                # # Now move:
-                # if self.random.random() < 0.1:
-                #     self.model.grid.move_agent(self, next_move)
-                #     self.steps_taken+=1
 
     def step(self):
         """ 
@@ -243,7 +226,7 @@ class ObstacleAgent(Agent):
 
 class BoxAgent(Agent):
     """
-    Box agent. Just to add obstacles to the grid.
+    Box agent. Just to add boxes to the grid.
     """
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -258,6 +241,7 @@ class EndPointAgent(Agent):
     """
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
+        self.limit = 5
 
     def step(self):
         pass  
