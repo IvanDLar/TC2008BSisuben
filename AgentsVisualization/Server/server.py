@@ -7,8 +7,8 @@ from RandomAgents import *
 
 # Size of the board:
 number_agents = 1
-number_boxes = 15;
-number_end_points = 2;
+number_boxes = 15
+number_end_points = 2
 width = 28
 height = 28
 randomModel = None
@@ -41,7 +41,7 @@ def getAgents():
     global randomModel
 
     if request.method == 'GET':
-        agentPositions = [{"id": str(a.unique_id), "x": x, "y":0.5, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, RandomAgent)]
+        agentPositions = [{"id": str(a.unique_id), "x": x, "y": 0, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, RandomAgent)]
 
         return jsonify({'positions':agentPositions})
 
@@ -59,7 +59,7 @@ def getBoxes():
     global randomModel
 
     if request.method == 'GET':
-        boxPositions = [{"id": str(a.unique_id), "x": x, "y":0.5, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, BoxAgent)]
+        boxPositions = [{"id": str(a.unique_id), "x": x, "y":0.3, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, BoxAgent)]
 
         return jsonify({'positions':boxPositions})
 
@@ -67,8 +67,10 @@ def getBoxes():
 def getEndPoints():
     global randomModel
 
+    
+
     if request.method == 'GET':
-        endPointPositions = [{"id": str(a.unique_id), "x": x, "y":0.5, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, EndPointAgent)]
+        endPointPositions = [{"id": str(a.unique_id), "x": x, "y":1.2, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, EndPointAgent)]
 
         return jsonify({'positions':endPointPositions})
 
