@@ -199,14 +199,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 357902674}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 13.93, y: 24.81, z: 13.54}
+  m_LocalRotation: {x: 0.5325808, y: 0, z: 0, w: 0.84637916}
+  m_LocalPosition: {x: 10.49, y: 20.86, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 64.36, y: 0, z: 0}
 --- !u!1 &596995081
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,9 +333,9 @@ MonoBehaviour:
   agentPrefab: {fileID: 701828089398414538, guid: c6fd3d894e2d60e4880ee651a9ab1b42, type: 3}
   obstaclePrefab: {fileID: 6891723511095266445, guid: 0dcc2cb62bf64b34e9ad78d0149e330a, type: 3}
   boxPrefab: {fileID: 961990229689801968, guid: ee469e15406ccf8b5b59106051caa9b4, type: 3}
-  endPointPrefab: {fileID: 8102729382312259521, guid: ec03db3fda9c46458bf4fb4f61cc11bd, type: 3}
+  endPointPrefab: {fileID: 4041917766677888997, guid: 831b6237a428d05e3b3ac71b24faa277, type: 3}
   floor: {fileID: 1555382164}
-  NAgents: 1
+  NAgents: 4
   NBoxes: 10
   NEndPoints: 2
   width: 28
