@@ -57,19 +57,15 @@ class RandomAgent(Agent):
         
         if self.hasBox == False:
             if len(boxes) > 0:
-                # If we have trash agents in the trash list we move to the trash's position
                 next_move = boxes[-1].pos
                 self.model.grid.move_agent(self, next_move)
-                # We use remove_agent method to remove the trash agent
                 self.model.grid.remove_agent(boxes[-1])
-                #Agent leave the box in the endpoint
                 print("Has Box State: ", self.hasBox)
                 self.hasBox = True
                 
             else:
                 possible_steps = self.model.grid.get_neighborhood(
                     self.pos,
-                    # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
                     moore=False,
                     include_center=True)
 
@@ -80,26 +76,9 @@ class RandomAgent(Agent):
                 next_moves = [p for p, f in zip(
                     possible_steps, freeSpaces) if f == True]
                 next_move = self.random.choice(next_moves)
-
-                empty = not self.visited
-                nextMove = next_move not in self.visited
-                allVisited = all(cell in self.visited for cell in next_moves)
-
-                # escapes if roomba is traped
-                if allVisited:
-                    next_move = self.random.choice(next_moves)
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    # if there is none cell visited it moves wherever
-                if empty:
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    self.visited.append(next_move)
-                    # if the selected cell is not visited it moves
-                if nextMove:
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    self.visited.append(next_move)  
+                self.model.grid.move_agent(self, next_move)
+                self.steps_taken += 1
+             
                     
         elif self.hasBox == True:  
             #Manhattan Distance

@@ -51,7 +51,7 @@ public class AgentController : MonoBehaviour
 
     public GameObject agentPrefab, obstaclePrefab, boxPrefab, endPointPrefab, floor;
     public int NAgents, NBoxes, NEndPoints, width, height;
-    public float timeToUpdate = 5.0f;
+    public float timeToUpdate = 0.5f;
     private float timer, dt;
 
     void Start()
@@ -90,7 +90,7 @@ public class AgentController : MonoBehaviour
         if (updated)
         {
             timer -= Time.deltaTime;
-            dt = 0.5f - (timer / timeToUpdate);
+            dt = 1.0f - (timer / timeToUpdate);
 
             foreach(var agent in currPositions)
             {
