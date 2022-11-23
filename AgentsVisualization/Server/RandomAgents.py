@@ -135,7 +135,9 @@ class RandomAgent(Agent):
 
                 #Get the endPoint object
                 getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == isNear[0].pos}
+
                 self.hasBox = False
+                
                 if((next(iter(getEndPointKey)).limit) > 0):
                     next(iter(getEndPointKey)).limit = next(iter(getEndPointKey)).limit - 1
                 

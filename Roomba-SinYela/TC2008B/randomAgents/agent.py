@@ -70,26 +70,9 @@ class RandomAgent(Agent):
                     possible_steps, freeSpaces) if f == True]
                 next_move = self.random.choice(next_moves)
 
-                empty = not self.visited
-                nextMove = next_move not in self.visited
-                allVisited = all(cell in self.visited for cell in next_moves)
-
-                # escapes if roomba is traped
-                if allVisited:
-                    next_move = self.random.choice(next_moves)
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    # if there is none cell visited it moves wherever
-                if empty:
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    self.visited.append(next_move)
-                    # if the selected cell is not visited it moves
-                if nextMove:
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    self.visited.append(next_move)  
-                    
+                self.model.grid.move_agent(self, next_move)
+                self.steps_taken += 1
+                
         elif self.hasBox == True:  
             #Manhattan Distance
             def getShortestDistance(endPoints, myX, myY):
