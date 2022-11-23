@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -199,14 +199,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 357902674}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 13.93, y: 24.81, z: 13.54}
+  m_LocalRotation: {x: 0.5325808, y: 0, z: 0, w: 0.84637916}
+  m_LocalPosition: {x: 10.49, y: 20.86, z: 0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 64.36, y: 0, z: 0}
 --- !u!1 &596995081
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,17 +330,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 983bc179e80f15347a79dd7b044746e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentPrefab: {fileID: 4872725237878382012, guid: 464956e97a4eaf9458508c29e063ddd3, type: 3}
+  agentPrefab: {fileID: 701828089398414538, guid: c6fd3d894e2d60e4880ee651a9ab1b42, type: 3}
   obstaclePrefab: {fileID: 6891723511095266445, guid: 0dcc2cb62bf64b34e9ad78d0149e330a, type: 3}
   boxPrefab: {fileID: 961990229689801968, guid: ee469e15406ccf8b5b59106051caa9b4, type: 3}
-  endPointPrefab: {fileID: 6287065128934594708, guid: 51079dd1e7de1ea408f6203b9db29cb4, type: 3}
+  endPointPrefab: {fileID: 4041917766677888997, guid: 831b6237a428d05e3b3ac71b24faa277, type: 3}
   floor: {fileID: 1555382164}
-  box1: {fileID: 8239411849917960104, guid: 4060e7a958efe2a4cba0551db9f8302f, type: 3}
-  box2: {fileID: 6264730614472981613, guid: ded20b81224b6714497e3fde17ede344, type: 3}
-  box3: {fileID: 2511124188558476991, guid: 8b18c7fa473f46c449f098ddaac51237, type: 3}
-  box4: {fileID: 3112406423034040442, guid: 204b7196483c9b14a9783b21e6bd0e01, type: 3}
-  box5: {fileID: 7960438632766890101, guid: 3b866d29da7bf9a4199bd912abf52d4f, type: 3}
-  NAgents: 5
+  NAgents: 4
   NBoxes: 10
   NEndPoints: 2
   width: 28
