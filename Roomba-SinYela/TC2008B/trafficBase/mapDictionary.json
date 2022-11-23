@@ -1,11 +1,10 @@
 {
     ">" : "Right",
     "<" : "Left",
-    "S" : 5,
-    "s" : 2,
+    "S" : 15,
+    "s" : 7,
     "#" : "Obstacle",
     "v" : "Down",
     "^" : "Up",
-    "D" : "Destination",
-    "C" : "Car"
+    "D" : "Destination"
 }

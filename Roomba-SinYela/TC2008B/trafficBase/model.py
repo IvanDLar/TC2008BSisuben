@@ -43,8 +43,8 @@ class RandomModel(Model):
                     elif col == "D":
                         agent = Destination(f"d_{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
-                        
-                    elif col == "C":
+
+                    elif col == "c":
                         agent = Car(f"c_{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
 
