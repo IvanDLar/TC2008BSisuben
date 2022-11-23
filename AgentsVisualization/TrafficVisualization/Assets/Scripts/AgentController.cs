@@ -10,6 +10,8 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 [Serializable]
+
+
 public class AgentData
 {
     public string id;
@@ -49,7 +51,7 @@ public class AgentController : MonoBehaviour
 
     bool updated = false, started = false;
 
-    public GameObject agentPrefab, obstaclePrefab, boxPrefab, endPointPrefab, floor;
+    public GameObject agentPrefab, obstaclePrefab, boxPrefab, endPointPrefab, floor, box1,box2,box3,box4,box5;
     public int NAgents, NBoxes, NEndPoints, width, height;
     public float timeToUpdate = 5.0f;
     private float timer, dt;
@@ -86,7 +88,7 @@ public class AgentController : MonoBehaviour
         if (updated)
         {
             timer -= Time.deltaTime;
-            dt = 1.0f - (timer / timeToUpdate);
+            dt = 1.0f - (timer / timeToUpdate - 100000);
 
             foreach(var agent in currPositions)
             {
@@ -100,9 +102,19 @@ public class AgentController : MonoBehaviour
                 if(direction != Vector3.zero) agents[agent.Key].transform.rotation = Quaternion.LookRotation(direction);
             }
 
+        
+
             // float t = (timer / timeToUpdate);
             // dt = t * t * ( 3f - 2f*t);
         }
+
+         if (Input.GetKeyDown("space"))
+        {
+            print("space key was pressed");
+        }
+
+
+        
     }
  
     IEnumerator UpdateSimulation()
@@ -212,6 +224,8 @@ public class AgentController : MonoBehaviour
         {
             boxData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
 
+            Debug.Log("Box:");
+
             Debug.Log(boxData.positions);
 
             foreach(AgentData box in boxData.positions)
@@ -225,6 +239,7 @@ public class AgentController : MonoBehaviour
     {
         UnityWebRequest www = UnityWebRequest.Get(serverUrl + getEndpointsEndpoint);
         yield return www.SendWebRequest();
+
  
         if (www.result != UnityWebRequest.Result.Success)
             Debug.Log(www.error);
@@ -236,8 +251,13 @@ public class AgentController : MonoBehaviour
 
             foreach(AgentData box in endPointData.positions)
             {
+
                 Instantiate(endPointPrefab, new Vector3(box.x, box.y, box.z), Quaternion.identity);
+                
+
             }
         }
+
+       
     }
 }

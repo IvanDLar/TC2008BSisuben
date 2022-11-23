@@ -285,7 +285,7 @@ class RandomModel(Model):
 
         # Add the agent to a random empty grid cell
         for i in range(self.num_agents):
-            a = RandomAgent(i+1000, self) 
+            a = RandomAgent(i+1000, self)
             self.schedule.add(a)
 
             pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
