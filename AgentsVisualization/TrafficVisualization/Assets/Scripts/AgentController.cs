@@ -44,8 +44,8 @@ public class AgentController : MonoBehaviour
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
     AgentsData agentsData, obstacleData, boxData, endPointData;
-    Dictionary<string, GameObject> agents;
-    Dictionary<string, Vector3> prevPositions, currPositions;
+    Dictionary<string, GameObject> agents, boxes;
+    Dictionary<string, Vector3> prevPositions, currPositions, prevBoxPositions, currBoxPositions;
 
     bool updated = false, started = false;
 
@@ -64,7 +64,11 @@ public class AgentController : MonoBehaviour
         prevPositions = new Dictionary<string, Vector3>();
         currPositions = new Dictionary<string, Vector3>();
 
+        prevBoxPositions = new Dictionary<string, Vector3>();
+        currBoxPositions = new Dictionary<string, Vector3>();
+
         agents = new Dictionary<string, GameObject>();
+        boxes = new Dictionary<string, GameObject>();
 
         floor.transform.localScale = new Vector3((float)width/10, 1, (float)height/10);
         floor.transform.localPosition = new Vector3((float)width/2-0.5f, 0, (float)height/2-0.5f);
@@ -99,6 +103,17 @@ public class AgentController : MonoBehaviour
                 agents[agent.Key].transform.localPosition = interpolated;
                 if(direction != Vector3.zero) agents[agent.Key].transform.rotation = Quaternion.LookRotation(direction);
             }
+            foreach(var box in currBoxPositions)
+            {
+                Vector3 currentBoxPosition = box.Value;
+                Vector3 previousBoxPosition = prevBoxPositions[box.Key];
+
+                Vector3 interpolatedBox = Vector3.Lerp(previousBoxPosition, currentBoxPosition, dt);
+                Vector3 direction = currentBoxPosition - interpolatedBox;
+
+                boxes[box.Key].transform.localPosition = interpolatedBox;
+                if(direction != Vector3.zero) boxes[box.Key].transform.rotation = Quaternion.LookRotation(direction);
+            }
 
             // float t = (timer / timeToUpdate);
             // dt = t * t * ( 3f - 2f*t);
@@ -115,8 +130,7 @@ public class AgentController : MonoBehaviour
         else 
         {
             StartCoroutine(GetAgentsData());
-            StartCoroutine(GetBoxData());
-            StartCoroutine(GetEndPointData()); //Usar contador para poder apilar las cajas
+            StartCoroutine(GetBoxData()); 
         }
     }
 
@@ -179,8 +193,8 @@ public class AgentController : MonoBehaviour
                     }
             }
 
-            updated = true;
-            if(!started) started = true;
+            //updated = true;
+            //if(!started) started = true;
         }
     }
 
@@ -203,7 +217,7 @@ public class AgentController : MonoBehaviour
             }
         }
     }
-        IEnumerator GetBoxData() 
+    IEnumerator GetBoxData() 
     {
         UnityWebRequest www = UnityWebRequest.Get(serverUrl + getBoxesEndpoint);
         yield return www.SendWebRequest();
@@ -213,12 +227,29 @@ public class AgentController : MonoBehaviour
         else 
         {
             boxData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
-            Debug.Log(boxData);
-
+            
             foreach(AgentData box in boxData.positions)
             {
-                Instantiate(boxPrefab, new Vector3(box.x, box.y, box.z), Quaternion.identity);
+                Vector3 newBoxPosition = new Vector3(box.x, box.y, box.z);
+
+                    if(!started)
+                    {
+                        prevBoxPositions[box.id] = newBoxPosition;
+                        boxes[box.id] = Instantiate(boxPrefab, newBoxPosition, Quaternion.identity);
+                    }
+                    else
+                    {
+                        //Compara los JSONS, si falta alguna de las cajas en el nuevo JSON eliminar la caja de unity
+
+                        // Vector3 currentBoxPosition = new Vector3();
+                        // if(currBoxPositions.TryGetValue(box.id, out currentBoxPosition))
+                        //     prevBoxPositions[box.id] = currentBoxPosition;
+                        // currBoxPositions[box.id] = newBoxPosition;
+                    }
             }
+
+            updated = true;
+            if(!started) started = true;
         }
     }
 
@@ -235,9 +266,9 @@ public class AgentController : MonoBehaviour
 
             Debug.Log(endPointData.positions);
 
-            foreach(AgentData box in endPointData.positions)
+            foreach(AgentData endPoint in endPointData.positions)
             {
-                Instantiate(endPointPrefab, new Vector3(box.x, box.y, box.z), Quaternion.identity);
+                Instantiate(endPointPrefab, new Vector3(endPoint.x, endPoint.y, endPoint.z), Quaternion.identity);
             }
         }
     }

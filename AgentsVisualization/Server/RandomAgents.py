@@ -167,7 +167,6 @@ class RandomAgent(Agent):
                         if value == isNear[0].pos:
                             del endPointDictionary[key]
 
-            
             #If the robot is not inside the point nor near
             else:
                     #Initialice the move to station state and within we will modify the state of the robot
