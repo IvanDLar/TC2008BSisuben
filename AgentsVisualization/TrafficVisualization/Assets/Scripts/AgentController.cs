@@ -90,7 +90,7 @@ public class AgentController : MonoBehaviour
         if (updated)
         {
             timer -= Time.deltaTime;
-            dt = 0.5f - (timer / timeToUpdate);
+            dt = 1.0f - (timer / timeToUpdate);
 
             foreach(var agent in currPositions)
             {
