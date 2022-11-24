@@ -333,14 +333,14 @@ MonoBehaviour:
   agentPrefab: {fileID: 4872725237878382012, guid: 464956e97a4eaf9458508c29e063ddd3, type: 3}
   obstaclePrefab: {fileID: 6891723511095266445, guid: 0dcc2cb62bf64b34e9ad78d0149e330a, type: 3}
   boxPrefab: {fileID: 961990229689801968, guid: ee469e15406ccf8b5b59106051caa9b4, type: 3}
-  endPointPrefab: {fileID: 4041917766677888997, guid: 831b6237a428d05e3b3ac71b24faa277, type: 3}
+  endPointPrefab: {fileID: 6287065128934594708, guid: 51079dd1e7de1ea408f6203b9db29cb4, type: 3}
   floor: {fileID: 1555382164}
-  NAgents: 4
-  NBoxes: 10
+  NAgents: 1
+  NBoxes: 6
   NEndPoints: 2
-  width: 28
-  height: 28
-  timeToUpdate: 2
+  width: 10
+  height: 10
+  timeToUpdate: 1
 --- !u!4 &1518653506
 Transform:
   m_ObjectHideFlags: 0
