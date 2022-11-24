@@ -30,8 +30,8 @@ def initModel():
         height = int(request.form.get('height'))
         currentStep = 0
 
-        print(request.form)
-        print(number_agents, number_boxes, number_end_points, width, height)
+        # print(request.form)
+        # print(number_agents, number_boxes, number_end_points, width, height)
         randomModel = RandomModel(number_agents, number_boxes, number_end_points, width, height)
 
         return jsonify({"message":"Parameters recieved, model initiated."})
@@ -66,8 +66,6 @@ def getBoxes():
 @app.route('/getEndPoints', methods=['GET'])
 def getEndPoints():
     global randomModel
-
-    
 
     if request.method == 'GET':
         endPointPositions = [{"id": str(a.unique_id), "x": x, "y":1.2, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, EndPointAgent)]

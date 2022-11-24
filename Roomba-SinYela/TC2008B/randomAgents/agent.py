@@ -70,26 +70,9 @@ class RandomAgent(Agent):
                     possible_steps, freeSpaces) if f == True]
                 next_move = self.random.choice(next_moves)
 
-                empty = not self.visited
-                nextMove = next_move not in self.visited
-                allVisited = all(cell in self.visited for cell in next_moves)
-
-                # escapes if roomba is traped
-                if allVisited:
-                    next_move = self.random.choice(next_moves)
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    # if there is none cell visited it moves wherever
-                if empty:
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    self.visited.append(next_move)
-                    # if the selected cell is not visited it moves
-                if nextMove:
-                    self.model.grid.move_agent(self, next_move)
-                    self.steps_taken += 1
-                    self.visited.append(next_move)  
-                    
+                self.model.grid.move_agent(self, next_move)
+                self.steps_taken += 1
+                
         elif self.hasBox == True:  
             #Manhattan Distance
             def getShortestDistance(endPoints, myX, myY):
@@ -138,6 +121,7 @@ class RandomAgent(Agent):
                 print("I AM GOING TO THE POINT")
                 print("-----------------")
                 self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(isNear[0].pos)])
+                self.hasBox = False
             
             elif (len(isNear) > 0 and self.pos == isNear[0].pos):
                 #Stop Moving (later drop the box)
@@ -145,7 +129,7 @@ class RandomAgent(Agent):
 
                 #Get the endPoint object
                 getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == isNear[0].pos}
-                self.hasBox = False
+                
                 if((next(iter(getEndPointKey)).limit) > 0):
                     next(iter(getEndPointKey)).limit = next(iter(getEndPointKey)).limit - 1
                 
