@@ -2,6 +2,7 @@ from agent import *
 from model import RandomModel
 from mesa.visualization.modules import CanvasGrid, BarChartModule
 from mesa.visualization.ModularVisualization import ModularServer
+from mesa.visualization.UserParam import UserSettableParameter
 
 def agent_portrayal(agent):
     if agent is None: return
@@ -35,11 +36,13 @@ def agent_portrayal(agent):
 
     if (isinstance(agent, Car)):
         portrayal["Color"] = "purple"
-        portrayal["Layer"] = 0
+        portrayal["Layer"] = 1
         portrayal["w"] = 0.8
         portrayal["h"] = 0.8
 
     return portrayal
+model_params = {"N": UserSettableParameter("slider", "Number of car", 1, 1, 20, 1)
+                }
 
 width = 0
 height = 0
@@ -49,7 +52,6 @@ with open('2022_base.txt') as baseFile:
     width = len(lines[0])-1
     height = len(lines)
 
-model_params = {"N":5}
 
 print(width, height)
 grid = CanvasGrid(agent_portrayal, width, height, 500, 500)
