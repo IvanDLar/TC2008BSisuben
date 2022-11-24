@@ -67,8 +67,6 @@ def getBoxes():
 def getEndPoints():
     global randomModel
 
-    
-
     if request.method == 'GET':
         endPointPositions = [{"id": str(a.unique_id), "x": x, "y":1.2, "z":z} for (a, x, z) in randomModel.grid.coord_iter() if isinstance(a, EndPointAgent)]
 

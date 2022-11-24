@@ -10,6 +10,7 @@ Autor: Jorge Ramírez Uresti, Octavio Navarro
 from mesa import Agent, Model
 from mesa.time import RandomActivation
 from mesa.space import Grid
+from mesa import Agent
 
 class RandomAgent(Agent):
     """
@@ -57,15 +58,19 @@ class RandomAgent(Agent):
         
         if self.hasBox == False:
             if len(boxes) > 0:
+                # If we have trash agents in the trash list we move to the trash's position
                 next_move = boxes[-1].pos
                 self.model.grid.move_agent(self, next_move)
+                # We use remove_agent method to remove the trash agent
                 self.model.grid.remove_agent(boxes[-1])
+                #Agent leave the box in the endpoint
                 print("Has Box State: ", self.hasBox)
                 self.hasBox = True
                 
             else:
                 possible_steps = self.model.grid.get_neighborhood(
                     self.pos,
+                    # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
                     moore=False,
                     include_center=True)
 
@@ -76,10 +81,10 @@ class RandomAgent(Agent):
                 next_moves = [p for p, f in zip(
                     possible_steps, freeSpaces) if f == True]
                 next_move = self.random.choice(next_moves)
+
                 self.model.grid.move_agent(self, next_move)
                 self.steps_taken += 1
-             
-                    
+                
         elif self.hasBox == True:  
             #Manhattan Distance
             def getShortestDistance(endPoints, myX, myY):
@@ -122,12 +127,14 @@ class RandomAgent(Agent):
                 if isinstance(i, EndPointAgent):
                     isNear.append(i)
 
+            print("IS NEAR: ", isNear)
             #If there is an element in the list move towards the endpoint
             if(len(isNear) > 0 and self.pos != isNear[0].pos):
                 print("-----------------")
                 print("I AM GOING TO THE POINT")
                 print("-----------------")
                 self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(isNear[0].pos)])
+                self.hasBox = False
             
             elif (len(isNear) > 0 and self.pos == isNear[0].pos):
                 #Stop Moving (later drop the box)
@@ -135,8 +142,6 @@ class RandomAgent(Agent):
 
                 #Get the endPoint object
                 getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == isNear[0].pos}
-
-                self.hasBox = False
                 
                 if((next(iter(getEndPointKey)).limit) > 0):
                     next(iter(getEndPointKey)).limit = next(iter(getEndPointKey)).limit - 1
@@ -148,6 +153,7 @@ class RandomAgent(Agent):
                         if value == isNear[0].pos:
                             del endPointDictionary[key]
 
+            
             #If the robot is not inside the point nor near
             else:
                     #Initialice the move to station state and within we will modify the state of the robot

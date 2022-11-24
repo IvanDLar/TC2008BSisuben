@@ -121,6 +121,7 @@ class RandomAgent(Agent):
                 print("I AM GOING TO THE POINT")
                 print("-----------------")
                 self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(isNear[0].pos)])
+                self.hasBox = False
             
             elif (len(isNear) > 0 and self.pos == isNear[0].pos):
                 #Stop Moving (later drop the box)
@@ -128,7 +129,7 @@ class RandomAgent(Agent):
 
                 #Get the endPoint object
                 getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == isNear[0].pos}
-                self.hasBox = False
+                
                 if((next(iter(getEndPointKey)).limit) > 0):
                     next(iter(getEndPointKey)).limit = next(iter(getEndPointKey)).limit - 1
                 
