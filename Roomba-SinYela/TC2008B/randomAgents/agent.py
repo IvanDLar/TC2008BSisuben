@@ -47,7 +47,7 @@ class RandomAgent(Agent):
         if self.hasBox == False:
             if len(boxes) > 0:
                 # If we have trash agents in the trash list we move to the trash's position
-                next_move = boxes[-1].pos
+                next_move = boxes[-1].posu
                 self.model.grid.move_agent(self, next_move)
                 # We use remove_agent method to remove the trash agent
                 self.model.grid.remove_agent(boxes[-1])

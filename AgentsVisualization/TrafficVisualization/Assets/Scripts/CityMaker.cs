@@ -10,7 +10,7 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject semaphorePrefab;
     [SerializeField] int tileSize;
 
-    private Light myLightComponent;
+
 
 
     // Start is called before the first frame update
@@ -18,7 +18,12 @@ public class CityMaker : MonoBehaviour
     {
         MakeTiles(layout.text);
 
-        redLight = GameObject.FindGameObjectsWithTag("RedLight")
+        // var textFile = Resources.Load<GameObject>("Assets/Prefabs/semaphore 1");
+
+        // semaphorePrefab = GameObject.Find("red");
+        // myRedLight = redLight.GetComponentInChildren<Light>();
+
+
     }
 
 
@@ -27,6 +32,10 @@ public class CityMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // myRedLight.enabled = !myRedLight.enabled;
+        sema = gameObject.transform.Find("semaphore 1");
+
+        sema.transform.Find("red").GetComponentInChildren<Light>().enabled = false;
         
     }
 

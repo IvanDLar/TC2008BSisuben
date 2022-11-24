@@ -1,4 +1,5 @@
 from mesa import Agent
+from mesa import MultiGrid
 
 class Car(Agent):
     """
@@ -20,6 +21,7 @@ class Car(Agent):
         """ 
         Determines if the agent can move in the direction that was chosen
         """        
+        self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 5)
         self.model.grid.move_to_empty(self)
 
     def step(self):
