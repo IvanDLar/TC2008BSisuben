@@ -10,11 +10,19 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject semaphorePrefab;
     [SerializeField] int tileSize;
 
+    private Light myLightComponent;
+
+
     // Start is called before the first frame update
     void Start()
     {
         MakeTiles(layout.text);
+
+        redLight = GameObject.FindGameObjectsWithTag("RedLight")
     }
+
+
+
 
     // Update is called once per frame
     void Update()

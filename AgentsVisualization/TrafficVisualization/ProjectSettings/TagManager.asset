@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Box
+  - EndPoint
+  - GreenLight
+  - RedLight
   layers:
   - Default
   - TransparentFX
