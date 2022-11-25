@@ -23,10 +23,10 @@ class Car(Agent):
         """ 
         Determines if the agent can move in the direction that was chosen
         """        
-        possible_steps = self.model.grid.get_neighborhood(
-            self.pos,
-            moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-            include_center=False) 
+        # possible_steps = self.model.grid.get_neighborhood(
+        #     self.pos,
+        #     moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+        #     include_center=False) 
         
          # Checks which grid cells are empty
         
@@ -34,12 +34,20 @@ class Car(Agent):
         # road = [road_agent for road_agent in self.model.grid.get_neighbors(
         #     self.pos, moore=True, include_center=True
         # )]
-        thin = self.model.grid.get_cell_list_contents(self.pos)
-        for agentR in thin:
+        road = self.model.grid.get_cell_list_contents(self.pos)
+        for agentR in road:
             if isinstance(agentR, Road):
                 if agentR.direction == "Right":
                     newpos = (self.pos[0]+1,self.pos[1])
-                    # self.pos = newpos
+                    self.model.grid.move_agent(self, newpos)
+                elif agentR.direction == "Left":
+                    newpos = (self.pos[0]-1,self.pos[1])
+                    self.model.grid.move_agent(self, newpos)
+                elif agentR.direction == "Down":
+                    newpos = (self.pos[0],self.pos[1]-1)
+                    self.model.grid.move_agent(self, newpos)
+                elif agentR.direction == "Up":
+                    newpos = (self.pos[0],self.pos[1]+1)
                     self.model.grid.move_agent(self, newpos)
         # print(thin)
 
