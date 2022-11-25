@@ -42,42 +42,38 @@ class RandomModel(Model):
                         agent = Destination(f"d_{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
 
-       
+        def cellList(posx, posy):
+            road = self.grid.get_cell_list_contents((posx,posy))
+            return(road)
+        
+        def checkDirection(rode, dir1, dir2, posx,posy, typeAgent, nextcheck): 
+            road2 = cellList(posx, posy)
+            for agentR in road:
+                if agentR.direction == dir1 or agentR.direction == dir2:
+                    for agentRP in road2:
+                        if isinstance(agentRP, typeAgent):
+                            agentRP.direction = agentR.direction
+                else:
+                    for agentR2 in nextcheck:
+                        if agentR2.direction == dir1 or agentR2.direction == dir2:
+                            for agentRP in road2:
+                                if isinstance(agentRP, typeAgent):
+                                    agentRP.direction = agentR.direction
+
+
+
         for i in self.traffic_lights:
             if i.state:
-                road = self.grid.get_cell_list_contents((i.pos[0]+1,i.pos[1]))
-                for agentR in road:
-                    if agentR.direction == "Left" or agentR.direction == "Right":
-                        roadpos = self.grid.get_cell_list_contents((i.pos[0],i.pos[1]))
-                        for agentRP in roadpos:
-                            if isinstance(agentRP, Road):
-                                agentRP.direction = agentR.direction
-                    else:
-                        road = self.grid.get_cell_list_contents((i.pos[0]-1,i.pos[1]))
-                        for agentR in road:
-                            if agentR.direction == "Left" or agentR.direction == "Right":
-                                roadpos = self.grid.get_cell_list_contents((i.pos[0],i.pos[1]))
-                                for agentRP in roadpos:
-                                    if isinstance(agentRP, Road):
-                                        agentRP.direction = agentR.direction
+                road = cellList(i.pos[0]+1, i.pos[1]) #Right
+                road2 = cellList(i.pos[0]-1, i.pos[1]) #Left
+                checkDirection(road, "Left", "Right", i.pos[0],i.pos[1], Road, road2)
             else:
-                road = self.grid.get_cell_list_contents((i.pos[0],i.pos[1]+1))
-                for agentR in road:
-                    if agentR.direction == "Up" or agentR.direction == "Down":
-                        roadpos = self.grid.get_cell_list_contents((i.pos[0],i.pos[1]))
-                        for agentRP in roadpos:
-                            if isinstance(agentRP, Road):
-                                agentRP.direction = agentR.direction
-                    else:
-                        road = self.grid.get_cell_list_contents((i.pos[0],i.pos[1]-1))
-                        for agentR in road:
-                            if agentR.direction == "Up" or agentR.direction == "Down":
-                                roadpos = self.grid.get_cell_list_contents((i.pos[0],i.pos[1]))
-                                for agentRP in roadpos:
-                                    if isinstance(agentRP, Road):
-                                        agentRP.direction = agentR.direction
+                road = cellList(i.pos[0],i.pos[1]+1) #Up
+                road2 = cellList(i.pos[0],i.pos[1]-1) #Down
+                checkDirection(road, "Up", "Down", i.pos[0],i.pos[1], Road, road2)
                                         
-                
+
+           
         for i in range(self.num_agents):
             pos = (12,18)
             a = Car(i+1000, self, pos) 
