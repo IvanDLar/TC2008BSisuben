@@ -3,6 +3,9 @@ from model import RandomModel
 from mesa.visualization.modules import CanvasGrid, BarChartModule
 from mesa.visualization.ModularVisualization import ModularServer
 from mesa.visualization.UserParam import UserSettableParameter
+from flask import Flask, request, jsonify
+
+
 
 def agent_portrayal(agent):
     if agent is None: return
@@ -41,6 +44,7 @@ def agent_portrayal(agent):
         portrayal["h"] = 0.8
 
     return portrayal
+
 model_params = {"N": UserSettableParameter("slider", "Number of car", 1, 1, 20, 1)
                 }
 
@@ -60,3 +64,4 @@ server = ModularServer(RandomModel, [grid], "Traffic Base", model_params)
                        
 server.port = 8521 # The default
 server.launch()
+

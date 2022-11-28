@@ -29,7 +29,7 @@ class RandomAgent(Agent):
         Determines if the agent can move in the direction that was chosen
         """
         # Detect the types of neighbours the agent has
-        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
+        listOfNeighbours = self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 1)
         listOfNeighboursPoints = self.model.grid.get_neighbors(self.pos, moore = False, include_center = True, radius = 1)
         isNear = []
         endPointsM = self.model.endPointsM

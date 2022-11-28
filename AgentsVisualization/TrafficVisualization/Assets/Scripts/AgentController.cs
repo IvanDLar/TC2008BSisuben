@@ -39,7 +39,6 @@ public class AgentController : MonoBehaviour
     string serverUrl = "http://localhost:8585";
     string getAgentsEndpoint = "/getAgents";
     string getObstaclesEndpoint = "/getObstacles";
-    string getBoxesEndpoint = "/getBoxes";
     string getEndpointsEndpoint = "/getEndPoints";
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
