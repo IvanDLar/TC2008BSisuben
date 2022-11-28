@@ -18,37 +18,66 @@ class Car(Agent):
         self.directions = [4, 6, 3, 1]
         self.steps_taken = 0
         super().__init__(unique_id, model)
-
+        
+   
+                    
     def move(self):
         """ 
         Determines if the agent can move in the direction that was chosen
-        """        
-        # possible_steps = self.model.grid.get_neighborhood(
-        #     self.pos,
-        #     moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-        #     include_center=False) 
+        """ 
+        #Derecha    
+        front = (self.pos[0]+1,self.pos[1]) 
+
+        def trafficCheck(front, agentL):
+            if agentL.state:
+                    print("Green")
+                    roadCheck(road)
+            else:
+                print("Red")
+                # newpos = (self.pos[0],self.pos[1])
+                # self.model.grid.move_agent(self, newpos)
         
-         # Checks which grid cells are empty
         
-        # freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
-        # road = [road_agent for road_agent in self.model.grid.get_neighbors(
-        #     self.pos, moore=True, include_center=True
-        # )]
+        def roadCheck(road):
+            for agentR in road:
+                if isinstance(agentR, Road):
+                    if agentR.direction == "Right":
+                        newpos = (self.pos[0]+1,self.pos[1])
+                        front = (self.pos[0]+2,self.pos[1]) 
+                        self.model.grid.move_agent(self, newpos)
+                    elif agentR.direction == "Left":
+                        newpos = (self.pos[0]-1,self.pos[1])
+                        front = (self.pos[0]-2,self.pos[1]) 
+                        self.model.grid.move_agent(self, newpos)
+                    elif agentR.direction == "Down":
+                        newpos = (self.pos[0],self.pos[1]-1)
+                        front = (self.pos[0],self.pos[1]-2) 
+                        self.model.grid.move_agent(self, newpos)
+                    elif agentR.direction == "Up":
+                        newpos = (self.pos[0],self.pos[1]+1)
+                        front = (self.pos[0],self.pos[1]+2) 
+                        self.model.grid.move_agent(self, newpos)
+                elif isinstance(agentR, Traffic_Light):
+                        trafficCheck(front, agentR)
+            
+
         road = self.model.grid.get_cell_list_contents(self.pos)
-        for agentR in road:
-            if isinstance(agentR, Road):
-                if agentR.direction == "Right":
-                    newpos = (self.pos[0]+1,self.pos[1])
+        trafLight = self.model.grid.get_cell_list_contents(front)
+        roadCheck(road)
+    
+    
+        for agentL in trafLight:
+            if isinstance(agentL, Traffic_Light):
+                print("Trafficlight: ", front)
+                if agentL.state:
+                    print("Green")
+                    roadCheck(road)
+                else:
+                    print("Red")
+                    newpos = (self.pos[0],self.pos[1])
                     self.model.grid.move_agent(self, newpos)
-                elif agentR.direction == "Left":
-                    newpos = (self.pos[0]-1,self.pos[1])
-                    self.model.grid.move_agent(self, newpos)
-                elif agentR.direction == "Down":
-                    newpos = (self.pos[0],self.pos[1]-1)
-                    self.model.grid.move_agent(self, newpos)
-                elif agentR.direction == "Up":
-                    newpos = (self.pos[0],self.pos[1]+1)
-                    self.model.grid.move_agent(self, newpos)
+                    
+        
         # print(thin)
 
         # for agentR in road:
@@ -70,7 +99,9 @@ class Car(Agent):
         """ 
         Determines the new direction it will take, and then moves
         """
+        
         self.move()
+        
 
 class Traffic_Light(Agent):
     """
