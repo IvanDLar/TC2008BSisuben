@@ -41,6 +41,22 @@ class Car(Agent):
                     self.front = (self.pos[0],self.pos[1]+2) 
                     
         return newpos
+    def cambiarCarril(self,road):
+        for agentR in road:
+            if agentR.direction == "Right":
+                self.pos = (self.pos[0]+1,self.pos[1]-1)
+                
+            elif agentR.direction == "Left":
+                newpos = (self.pos[0]-1,self.pos[1])
+                
+            elif agentR.direction == "Down":
+                newpos = (self.pos[0],self.pos[1]-1)
+                
+            elif agentR.direction == "Up":
+                newpos = (self.pos[0],self.pos[1]+1)
+                    
+        return newpos
+
 
     def move(self):
         """ 
@@ -52,10 +68,10 @@ class Car(Agent):
     
         for agentL in trafLight:
             if isinstance(agentL, Traffic_Light):
-                print("Trafficlight: ", self.front)
                 if not agentL.state:
-                    print("Red")
                     return
+            elif isinstance(agentL, Car):
+                return
                     
     
         
