@@ -31,7 +31,7 @@ class Car(Agent):
         def trafficCheck(front, agentL):
             if agentL.state:
                     print("Green")
-                    roadCheck(road)
+                    #roadCheck(road)
             else:
                 print("Red")
                 # newpos = (self.pos[0],self.pos[1])

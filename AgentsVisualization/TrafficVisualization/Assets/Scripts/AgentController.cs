@@ -38,6 +38,7 @@ public class AgentController : MonoBehaviour
     // private string url = "https://agents.us-south.cf.appdomain.cloud/";
     string serverUrl = "http://localhost:8585";
     string getAgentsEndpoint = "/getAgents";
+    string getBoxesEndpoint = "/getBoxes";
     string getObstaclesEndpoint = "/getObstacles";
     string getEndpointsEndpoint = "/getEndPoints";
     string sendConfigEndpoint = "/init";
