@@ -34,13 +34,12 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject semaphorePrefab;
     [SerializeField] int tileSize;
 
-    // string serverUrl = "http://localhost:8585";
-    // string getAgentsEndpoint = "/getAgents";
-    // string getObstaclesEndpoint = "/getObstacles";
-    // // string getBoxesEndpoint = "/getBoxes";
-    // string getEndpointsEndpoint = "/getEndPoints";
-    // string sendConfigEndpoint = "/init";
-    // string updateEndpoint = "/update";
+    string serverUrl = "http://localhost:8585";
+    string getAgentsEndpoint = "/getAgents";
+    string getObstaclesEndpoint = "/getObstacles";
+    string getEndpointsEndpoint = "/getEndPoints";
+    string sendConfigEndpoint = "/init";
+    string updateEndpoint = "/update";
     
 
 
@@ -151,19 +150,19 @@ public class CityMaker : MonoBehaviour
     }
 
 
-//     IEnumerator UpdateSimulation()
-//     {
-//         UnityWebRequest www = UnityWebRequest.Get(serverUrl + updateEndpoint);
-//         yield return www.SendWebRequest();
+    // IEnumerator UpdateSimulation()
+    // {
+    //     UnityWebRequest www = UnityWebRequest.Get(serverUrl + updateEndpoint);
+    //     yield return www.SendWebRequest();
  
-//         if (www.result != UnityWebRequest.Result.Success)
-//             Debug.Log(www.error);
-//         else 
-//         {
-//             StartCoroutine(GetAgentsData());
-//             StartCoroutine(GetBoxData()); 
-//         }
-//     }
+    //     if (www.result != UnityWebRequest.Result.Success)
+    //         Debug.Log(www.error);
+    //     else 
+    //     {
+    //         StartCoroutine(GetAgentsData());
+    //         StartCoroutine(GetBoxData()); 
+    //     }
+    // }
 
 //     IEnumerator SendConfiguration()
 //     {
