@@ -7,20 +7,64 @@ class Car(Agent):
         unique_id: Agent's ID 
         direction: Randomly chosen direction chosen from one of eight directions
     """
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, pos):
         """
         Creates a new random agent.
         Args:
             unique_id: The agent's ID
             model: Model reference for the agent
         """
+         #Top Rigth Down Left
+        self.directions = [4, 6, 3, 1]
+        self.steps_taken = 0
         super().__init__(unique_id, model)
 
     def move(self):
         """ 
         Determines if the agent can move in the direction that was chosen
         """        
-        self.model.grid.move_to_empty(self)
+        # possible_steps = self.model.grid.get_neighborhood(
+        #     self.pos,
+        #     moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
+        #     include_center=False) 
+        
+         # Checks which grid cells are empty
+        
+        # freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
+        # road = [road_agent for road_agent in self.model.grid.get_neighbors(
+        #     self.pos, moore=True, include_center=True
+        # )]
+        road = self.model.grid.get_cell_list_contents(self.pos)
+        for agentR in road:
+            if isinstance(agentR, Road):
+                if agentR.direction == "Right":
+                    newpos = (self.pos[0]+1,self.pos[1])
+                    self.model.grid.move_agent(self, newpos)
+                elif agentR.direction == "Left":
+                    newpos = (self.pos[0]-1,self.pos[1])
+                    self.model.grid.move_agent(self, newpos)
+                elif agentR.direction == "Down":
+                    newpos = (self.pos[0],self.pos[1]-1)
+                    self.model.grid.move_agent(self, newpos)
+                elif agentR.direction == "Up":
+                    newpos = (self.pos[0],self.pos[1]+1)
+                    self.model.grid.move_agent(self, newpos)
+        # print(thin)
+
+        # for agentR in road:
+        #     if agentR.pos == self.pos:
+        #         print(agentR.direction)
+        # print(road)
+        
+        # next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
+       
+        # next_move = self.random.choice(next_moves)
+
+        # if self.random.random() < 0.1:
+        #     self.model.grid.move_agent(self, next_move)
+        #     self.steps_taken+=1
+
+        # self.model.grid.move_to_empty(self)
 
     def step(self):
         """ 
