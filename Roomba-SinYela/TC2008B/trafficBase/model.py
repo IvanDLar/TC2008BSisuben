@@ -11,7 +11,8 @@ class RandomModel(Model):
         N: Number of agents in the simulation
     """
     def __init__(self, N):
-
+        self.num_agents = N
+        self.running = True
         dataDictionary = json.load(open("mapDictionary.json"))
 
         self.traffic_lights = []
@@ -44,12 +45,18 @@ class RandomModel(Model):
                         agent = Destination(f"d_{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
 
-                    elif col == "c":
-                        agent = Car(f"c_{r*self.width+c}", self)
-                        self.grid.place_agent(agent, (c, self.height - r - 1))
+        for i in range(self.num_agents):
+            b = Car(i+1000, self) 
+            self.schedule.add(b)
+            
+            pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+            pos = pos_gen(self.grid.width, self.grid.height)
+            while (not self.grid.is_cell_empty(pos)):
+                pos = pos_gen(self.grid.width, self.grid.height)
+            self.grid.place_agent(b, pos)
+        
 
-        self.num_agents = N
-        self.running = True
+
 
     def step(self):
         '''Advance the model by one step.'''

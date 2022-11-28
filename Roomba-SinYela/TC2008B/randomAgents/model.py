@@ -79,9 +79,7 @@ class RandomModel(Model):
             #Relate the position of a point to the eal specific object in the model
             self.endPointDict = dict(zip(self.endPointAgents, self.endPointsM))
             self.grid.place_agent(d, pos)
-        print(self.endPointDict)
         self.datacollector.collect(self)
-
         
     def step(self):
         '''Advance the model by one step.'''

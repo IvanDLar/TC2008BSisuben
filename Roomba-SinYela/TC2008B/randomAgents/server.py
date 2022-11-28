@@ -53,5 +53,5 @@ pie_chart = PieChartModule(
     
 server = ModularServer(RandomModel, [grid, pie_chart, bar_chart], "Random Agents", model_params)
                        
-server.port = 8521 # The default
+server.port = 8522 # The default
 server.launch()
