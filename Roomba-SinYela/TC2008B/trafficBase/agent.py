@@ -15,11 +15,35 @@ class Car(Agent):
             model: Model reference for the agent
         """
          #Top Rigth Down Left
+        self.pos = pos
         self.directions = [4, 6, 3, 1]
         self.steps_taken = 0
+        self.front = (self.pos[0]+1,self.pos[1]) 
         super().__init__(unique_id, model)
         
-   
+    def roadCheck(self,road):
+            for agentR in road:
+                if isinstance(agentR, Road):
+                    if agentR.direction == "Right":
+                        newpos = (self.pos[0]+1,self.pos[1])
+                        front = (self.pos[0]+2,self.pos[1]) 
+                        self.model.grid.move_agent(self, newpos)
+                        self.pos = newpos
+                    elif agentR.direction == "Left":
+                        newpos = (self.pos[0]-1,self.pos[1])
+                        front = (self.pos[0]-2,self.pos[1]) 
+                        self.model.grid.move_agent(self, newpos)
+                        self.pos = newpos
+                    elif agentR.direction == "Down":
+                        newpos = (self.pos[0],self.pos[1]-1)
+                        front = (self.pos[0],self.pos[1]-2) 
+                        self.model.grid.move_agent(self, newpos)
+                        self.pos = newpos
+                    elif agentR.direction == "Up":
+                        newpos = (self.pos[0],self.pos[1]+1)
+                        front = (self.pos[0],self.pos[1]+2) 
+                        self.model.grid.move_agent(self, newpos)
+                        self.pos = newpos
                     
     def move(self):
         """ 
@@ -38,44 +62,44 @@ class Car(Agent):
                 # self.model.grid.move_agent(self, newpos)
         
         
-        def roadCheck(road):
-            for agentR in road:
-                if isinstance(agentR, Road):
-                    if agentR.direction == "Right":
-                        newpos = (self.pos[0]+1,self.pos[1])
-                        front = (self.pos[0]+2,self.pos[1]) 
-                        self.model.grid.move_agent(self, newpos)
-                    elif agentR.direction == "Left":
-                        newpos = (self.pos[0]-1,self.pos[1])
-                        front = (self.pos[0]-2,self.pos[1]) 
-                        self.model.grid.move_agent(self, newpos)
-                    elif agentR.direction == "Down":
-                        newpos = (self.pos[0],self.pos[1]-1)
-                        front = (self.pos[0],self.pos[1]-2) 
-                        self.model.grid.move_agent(self, newpos)
-                    elif agentR.direction == "Up":
-                        newpos = (self.pos[0],self.pos[1]+1)
-                        front = (self.pos[0],self.pos[1]+2) 
-                        self.model.grid.move_agent(self, newpos)
-                elif isinstance(agentR, Traffic_Light):
-                        trafficCheck(front, agentR)
+        # def roadCheck(road):
+        #     for agentR in road:
+        #         if isinstance(agentR, Road):
+        #             if agentR.direction == "Right":
+        #                 newpos = (self.pos[0]+1,self.pos[1])
+        #                 front = (self.pos[0]+2,self.pos[1]) 
+        #                 self.model.grid.move_agent(self, newpos)
+        #             elif agentR.direction == "Left":
+        #                 newpos = (self.pos[0]-1,self.pos[1])
+        #                 front = (self.pos[0]-2,self.pos[1]) 
+        #                 self.model.grid.move_agent(self, newpos)
+        #             elif agentR.direction == "Down":
+        #                 newpos = (self.pos[0],self.pos[1]-1)
+        #                 front = (self.pos[0],self.pos[1]-2) 
+        #                 self.model.grid.move_agent(self, newpos)
+        #             elif agentR.direction == "Up":
+        #                 newpos = (self.pos[0],self.pos[1]+1)
+        #                 front = (self.pos[0],self.pos[1]+2) 
+        #                 self.model.grid.move_agent(self, newpos)
+        #         elif isinstance(agentR, Traffic_Light):
+        #                 trafficCheck(front, agentR)
             
 
         road = self.model.grid.get_cell_list_contents(self.pos)
         trafLight = self.model.grid.get_cell_list_contents(front)
-        roadCheck(road)
+        self.roadCheck(road)
     
     
-        for agentL in trafLight:
-            if isinstance(agentL, Traffic_Light):
-                print("Trafficlight: ", front)
-                if agentL.state:
-                    print("Green")
-                    roadCheck(road)
-                else:
-                    print("Red")
-                    newpos = (self.pos[0],self.pos[1])
-                    self.model.grid.move_agent(self, newpos)
+        # for agentL in trafLight:
+        #     if isinstance(agentL, Traffic_Light):
+        #         print("Trafficlight: ", front)
+        #         if agentL.state:
+        #             print("Green")
+        #             roadCheck(road)
+        #         else:
+        #             print("Red")
+        #             newpos = (self.pos[0],self.pos[1])
+        #             self.model.grid.move_agent(self, newpos)
                     
         
         # print(thin)
