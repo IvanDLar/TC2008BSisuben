@@ -311,6 +311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1457529884}
   - component: {fileID: 1457529883}
+  - component: {fileID: 1457529885}
   m_Layer: 0
   m_Name: City
   m_TagString: Untagged
@@ -330,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7376b41e8cfe8ff91fb865d4a420f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layout: {fileID: 4900000, guid: 78ad530ecd39ea0eb99db7562637e3bc, type: 3}
+  layout: {fileID: 4900000, guid: 546eebda13596f54299b7bd7da78254f, type: 3}
   roadPrefab: {fileID: 3240343348373693069, guid: 646fc54ff3078ce94bbdbd0f0d4c4a05, type: 3}
   buildingPrefab: {fileID: 5785842104517340929, guid: 6e1571e774d0c41a8810486669f4340e, type: 3}
   semaphorePrefab: {fileID: 6531651393276900204, guid: 6d05447c42fb94fe49cb068eb73aa9b9, type: 3}
@@ -350,6 +351,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1457529885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1457529882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85a119222d6eca54e82d19e2656bd80b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentPrefab: {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
+  NAgents: 12
+  timeToUpdate: 2
 --- !u!850595691 &1515965292
 LightingSettings:
   m_ObjectHideFlags: 0
