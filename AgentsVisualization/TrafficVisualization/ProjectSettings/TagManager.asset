@@ -6,11 +6,13 @@ TagManager:
   tags:
   - Box
   - EndPoint
+  - GreenLight
+  - RedLight
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Flag
+  - 
   - Water
   - UI
   - 
@@ -42,7 +44,4 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
-    locked: 0
-  - name: New Layer 1
-    uniqueID: 1462822019
     locked: 0

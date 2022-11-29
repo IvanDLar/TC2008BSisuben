@@ -15,62 +15,78 @@ class Car(Agent):
             model: Model reference for the agent
         """
          #Top Rigth Down Left
+        self.pos = pos
         self.directions = [4, 6, 3, 1]
         self.steps_taken = 0
+        self.front = (self.pos[0]-1,self.pos[1]) 
         super().__init__(unique_id, model)
-
-    def move(self):
-        """ 
-        Determines if the agent can move in the direction that was chosen
-        """        
-        # possible_steps = self.model.grid.get_neighborhood(
-        #     self.pos,
-        #     moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-        #     include_center=False) 
         
-         # Checks which grid cells are empty
-        
-        # freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
-        # road = [road_agent for road_agent in self.model.grid.get_neighbors(
-        #     self.pos, moore=True, include_center=True
-        # )]
-        road = self.model.grid.get_cell_list_contents(self.pos)
+    def roadCheck(self,road):
         for agentR in road:
             if isinstance(agentR, Road):
                 if agentR.direction == "Right":
                     newpos = (self.pos[0]+1,self.pos[1])
-                    self.model.grid.move_agent(self, newpos)
+                    self.front = (self.pos[0]+2,self.pos[1]) 
+                    
                 elif agentR.direction == "Left":
                     newpos = (self.pos[0]-1,self.pos[1])
-                    self.model.grid.move_agent(self, newpos)
+                    self.front = (self.pos[0]-2,self.pos[1]) 
+                    
                 elif agentR.direction == "Down":
                     newpos = (self.pos[0],self.pos[1]-1)
-                    self.model.grid.move_agent(self, newpos)
+                    self.front = (self.pos[0],self.pos[1]-2) 
+                    
                 elif agentR.direction == "Up":
                     newpos = (self.pos[0],self.pos[1]+1)
-                    self.model.grid.move_agent(self, newpos)
-        # print(thin)
+                    self.front = (self.pos[0],self.pos[1]+2) 
+                    
+        return newpos
+    def cambiarCarril(self,road):
+        for agentR in road:
+            if agentR.direction == "Right":
+                self.pos = (self.pos[0]+1,self.pos[1]-1)
+                
+            elif agentR.direction == "Left":
+                newpos = (self.pos[0]-1,self.pos[1])
+                
+            elif agentR.direction == "Down":
+                newpos = (self.pos[0],self.pos[1]-1)
+                
+            elif agentR.direction == "Up":
+                newpos = (self.pos[0],self.pos[1]+1)
+                    
+        return newpos
 
-        # for agentR in road:
-        #     if agentR.pos == self.pos:
-        #         print(agentR.direction)
-        # print(road)
+
+    def move(self):
+        """ 
+        Determines if the agent can move in the direction that was chosen
+        """ 
+
+        road = self.model.grid.get_cell_list_contents(self.pos)
+        trafLight = self.model.grid.get_cell_list_contents(self.front)
+    
+        for agentL in trafLight:
+            if isinstance(agentL, Traffic_Light):
+                if not agentL.state:
+                    return
+            elif isinstance(agentL, Car):
+                return
+                    
+    
         
-        # next_moves = [p for p,f in zip(possible_steps, freeSpaces) if f == True]
-       
-        # next_move = self.random.choice(next_moves)
-
-        # if self.random.random() < 0.1:
-        #     self.model.grid.move_agent(self, next_move)
-        #     self.steps_taken+=1
-
-        # self.model.grid.move_to_empty(self)
+        self.model.grid.move_agent(self, self.roadCheck(road))
+        
+                    
+                    
 
     def step(self):
         """ 
         Determines the new direction it will take, and then moves
         """
+        
         self.move()
+        
 
 class Traffic_Light(Agent):
     """
