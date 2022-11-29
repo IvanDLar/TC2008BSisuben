@@ -1,4 +1,5 @@
 from mesa import Agent
+from collections import deque
 
 class RandomAgent(Agent):
     """
@@ -44,6 +45,28 @@ class RandomAgent(Agent):
             self.pos, moore=True
         ) if isinstance(box_agent, BoxAgent)]
 
+        #Manhattan Distance
+        def getShortestDistance(endPoints, myX, myY):
+            #Aux array
+            distanceArray = []
+            for endPoint in endPoints:
+                endPointX = endPoint[0]
+                endPointY = endPoint[1]
+                print("X:", endPointX)
+                print("Y:", endPointY)
+
+                distance = abs(myX - endPointX) + abs(myY - endPointY)
+                distanceArray.insert(0, distance)
+
+            closetsPoint = endPoints[distanceArray.index(max(distanceArray))]
+            print("End Points: ", endPoints)
+            print("Distance Array", distanceArray)
+
+
+            print("Closest index: ", distanceArray.index(max(distanceArray)))
+            print("Closest Point: ", closetsPoint)
+            return closetsPoint
+
         if self.hasBox == False:
             if len(boxes) > 0:
                 # If we have trash agents in the trash list we move to the trash's position
@@ -74,29 +97,7 @@ class RandomAgent(Agent):
                 self.steps_taken += 1
 
         elif self.hasBox == True:
-            #Manhattan Distance
-            def getShortestDistance(endPoints, myX, myY):
-                #Aux array
-                distanceArray = []
-                for endPoint in endPoints:
-                    endPointX = endPoint[0]
-                    endPointY = endPoint[1]
-                    print("X:", endPointX)
-                    print("Y:", endPointY)
-
-                    distance = abs(myX - endPointX) + abs(myY - endPointY)
-                    distanceArray.insert(0, distance)
-
-                closetsPoint = endPoints[distanceArray.index(max(distanceArray))]
-                print("End Points: ", endPoints)
-                print("Distance Array", distanceArray)
-
-
-                print("Closest index: ", distanceArray.index(max(distanceArray)))
-                print("Closest Point: ", closetsPoint)
-                return closetsPoint
-
-
+            
             shortestDistance = getShortestDistance(endPointsM, self.pos[0], self.pos[1]);
 
             possible_steps = self.model.grid.get_neighborhood(
@@ -143,85 +144,169 @@ class RandomAgent(Agent):
 
             #If the robot is not inside the point nor near
             else:
-                R, C = self.model.grid.width, self.model.grid.height
-                m = self.model.grid
-                sr, sc = self.pos[0], self.pos[1] #Starting row and column values
-                rq, cq = [], [] #Empty Row queue and Column queue
-
-                #RxC matrix of false values for each of the "casillas"
-                visited = []
-
-                #Track previous movements
+                typeArray = []
                 prev = []
-
-                for i in range(C):
+                path = []
+                for i in range(self.model.grid.height):
                     rowList = []
                     prevList = []
-                    for j in range(R):
-                        rowList.append(False)
-                        prevList.append(None)
+                    for j in range(self.model.grid.width):
+                        if(len(self.model.grid[i, j]) > 0):
+                            rowList.append(self.model.grid[i, j][0])
+                            prevList.append(0)
+                        else:
+                            rowList.append(self.model.grid[i, j])
+                            prevList.append(0)
                     prev.append(prevList)
-                    visited.append(rowList)
+                    typeArray.append(rowList)
+                    # To move left, right, up and down
+                delta_x = [-1, 1, 0, 0]
+                delta_y = [0, 0, 1, -1]
 
-                dr = [self.directions[0], self.directions[2], 0, 0]
-                dc = [0, 0, self.directions[1], self.directions[3]]
+                def valid(x, y):
+                    if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
+                        return False
+                    return (not isinstance(typeArray[x][y], ObstacleAgent) or not isinstance(typeArray[x][y], BoxAgent))
 
-                def findPath():
-                    #Track numbers of steps taken
-                    moveCount = 0
-                    nodesLeftInLayer = 1
-                    nodesInNextLayer = 0
+                def solve(start, end):
+                    Q = deque([start])
+                    print("Q: ", Q)
+                    dist = {start: 0}
+                    while len(Q):
+                        curPoint = Q.popleft() #Move to one of the neighbors, remove visited
+                        curDist = dist[curPoint] #Gets the nums of levels it took to reach this node
+                        if curPoint == end: #If we have found a mathc to the endpoint
+                            path.append(curPoint)
+                            return [*set(path)], curDist
+                            
+                        for dx, dy in zip(delta_x, delta_y):
+                            nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+                            if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys():
+                                continue
+                            dist[nextPoint] = curDist + 1
+                            
+                            path.append(curPoint)
 
-                    #Track if we have reached the endpoint during the search
-                    reachedEnd = False
-
-                    rq.append(sr)
-                    cq.append(sc)
-                    visited[sr][sc] = True
-                    while len(rq) > 0:
-                        r = rq.pop(0)
-                        c = cq.pop(0)
-                        print("Isntance: ", self.model.grid[r][c])
-
-                        if len(self.model.grid[r][c]) > 0:
-                            if isinstance(self.model.grid[r][c][0], EndPointAgent):
-                                print("Found end point!")
-                                reachedEnd = True
-                                break
-                        nodesInNextLayer = exploreNeighbours(r, c)
-                        nodesLeftInLayer = nodesLeftInLayer- 1
-                        if nodesLeftInLayer == 0:
-                            nodesLeftInLayer = nodesInNextLayer
-                            nodesInNextLayer = 0
-                            print("Moved!!:", moveCount)
-                            moveCount = moveCount + 1   
-                    if reachedEnd:
-                        return moveCount
-                    return -1
-                
-                def exploreNeighbours(r, c):
-                    nodesInNextLayer = 0
-                    for i in range(4):
-                        rr = r + dr[i]
-                        cc = c + dc[i]
+                            # path.append((curPoint[0], curPoint[1])
+                            
+                            Q.append(nextPoint)
+                            # prev[nextPoint[0]][nextPoint[1]] = curPoint
                     
-                        #Skip out of bound locations
-                        if rr < 0 or cc < 0: continue
-                        if rr >= R or cc >= C: continue
-                    
-                        #Skip visited locations or blocked cells
-                        if visited[rr][cc]: continue
-                        if isinstance(m[rr][cc], BoxAgent):print("Box found at: ", [rr], [cc]); continue
                         
-                        rq.append(rr)
-                        cq.append(cc)
+                # print("Self pos: ", self.pos)
+                # print("Shortest Distance: ", shortestDistance)
+                def reconstructPath(s, e, prev):
+                    path = []
+                    i = e
+                    print("Prev", prev)
+                    print("i", i)
+                    print(prev[0][prev[0].index(i)])
+                    while i != prev[0][prev[0].index(i)]:
+                        if i != 0:
+                            path.append(i)
+                    path.reverse()
+                    print("Path", path)
+                    if path[0] == s:
+                        return(path)
+                    return []
 
-                        visited[rr][cc] = True
-                        nodesInNextLayer = nodesInNextLayer + 1
-                    return nodesInNextLayer
+                print("Solved: ", reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance)))
+                #print("Solved: ", solve(self.pos, shortestDistance))  
                 
-                print("Find path: ", findPath())
+                # R, C = self.model.grid.width, self.model.grid.height
+                # m = self.model.grid
+                # sr, sc = self.pos[0], self.pos[1] #Starting row and column values
+                # rq, cq = [], [] #Empty Row queue and Column queue
+
+                # #RxC matrix of false values for each of the "casillas"
+                # visited = []
+
+                # #Track previous movements
+                # prev = []
+
+                # for i in range(C):
+                #     rowList = []
+                #     prevList = []
+                #     for j in range(R):
+                #         rowList.append(False)
+                #         prevList.append(None)
+                #     prev.append(prevList)
+                #     visited.append(rowList)
+
+                # dr = [self.directions[0], self.directions[2], 0, 0]
+                # dc = [0, 0, self.directions[1], self.directions[3]]
+
+                # def findPath():
+                #     #Track numbers of steps taken
+                #     moveCount = 0
+                #     nodesLeftInLayer = 1
+                #     nodesInNextLayer = 0
+                #     endPointPos = 0
+
+                #     #Track if we have reached the endpoint during the search
+                #     reachedEnd = False
+
+                #     rq.append(sr)
+                #     cq.append(sc)
+
+                #     visited[sr][sc] = True
+
+                #     while len(rq) > 0:
+                #         r = rq.pop(0)
+                #         c = cq.pop(0)
+                #         print("Rows: ",[rq])
+
+                #         if len(self.model.grid[r][c]) > 0 and isinstance(self.model.grid[r][c][0], EndPointAgent):
+                #             print("Found end point!")
+                #             endPointPos = self.model.grid[r][c][0]
+                #             reachedEnd = True
+                #             break
+                #         nodesInNextLayer = exploreNeighbours(r, c)
+                #         nodesLeftInLayer = nodesLeftInLayer- 1
+                #         if nodesLeftInLayer == 0:
+                #             nodesLeftInLayer = nodesInNextLayer
+                #             nodesInNextLayer = 0
+                #             moveCount = moveCount + 1   
+                #     if reachedEnd:
+                #         return moveCount
+                #     return -1
                 
+                # def exploreNeighbours(r, c):
+                #     nodesInNextLayer = 0
+                #     for i in range(4):
+                #         rr = r + dr[i]
+                #         cc = c + dc[i]
+                    
+                #         #Skip out of bound locations
+                #         if rr < 0 or cc < 0: continue
+                #         if rr >= R or cc >= C: continue
+                    
+                #         #Skip visited locations or blocked cells
+                #         if visited[rr][cc]: continue
+                #         if len(m[rr][cc]) > 0 and isinstance(m[rr][cc][0], BoxAgent):print("Box found at:  ", [rr], [cc]); continue
+                        
+                #         rq.append(rr)
+                #         cq.append(cc)
+
+                #         visited[rr][cc] = True
+                #         prev[rr][cc] = [r,c]
+                #         nodesInNextLayer = nodesInNextLayer + 1
+                #     print("Nodes left in layer: ", nodesInNextLayer)
+                #     return nodesInNextLayer
+
+                # def reconstructPath(prev):
+                #     path = []
+                #     for i in prev:
+                #         for j in i:
+                #             if j != None: 
+                #                 path.append(j)
+                                
+                #     #let i = 0, i != null, at = prev[i]
+                #     print(path)
+                    
+                # print("Find path: ", findPath())
+                
+                # --------------------------------------------------------------------
                 #     #Initialice the move to station state and within we will modify the state of the robot
                 # #Move towards the point if it gets farther from the roobot
                 # #Update X
