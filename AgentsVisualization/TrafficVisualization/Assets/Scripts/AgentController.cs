@@ -25,65 +25,7 @@ public class AgentData
 }
 
 [Serializable]
-public class RobotData
-{
-    public string id;
-    public float x, y, z;
 
-    public RobotData(string id, float x, float y, float z)
-    {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-[Serializable]
-public class BoxData
-{
-    public string id;
-    public float x, y, z;
-
-    public BoxData(string id, float x, float y, float z)
-    {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-[Serializable]
-public class EndPointData
-{
-    public string id;
-    public float x, y, z;
-
-    public EndPointData(string id, float x, float y, float z)
-    {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-[Serializable]
-public class ObstacleData
-{
-    public string id;
-    public float x, y, z;
-
-    public ObstacleData(string id, float x, float y, float z)
-    {
-        this.id = id;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-}
-
-[Serializable]
 public class AgentsData
 {
     public List<AgentData> positions;
@@ -91,57 +33,17 @@ public class AgentsData
     public AgentsData() => this.positions = new List<AgentData>();
 }
 
-[Serializable]
-
-public class BoxesData
-{
-    public List<BoxData> positions;
-
-    public BoxesData() => this.positions = new List<BoxData>();
-}
-
-[Serializable]
-
-public class RobotsData
-{
-    public List<RobotData> positions;
-
-    public RobotsData() => this.positions = new List<RobotData>();
-}
-
-[Serializable]
-
-public class EndPointsData
-{
-    public List<EndPointData> positions;
-
-    public EndPointsData() => this.positions = new List<EndPointData>();
-}
-
-[Serializable]
-
-public class ObstaclesData
-{
-    public List<ObstacleData> positions;
-
-    public ObstaclesData() => this.positions = new List<ObstacleData>();
-}
-
 public class AgentController : MonoBehaviour
 {
     // private string url = "https://agents.us-south.cf.appdomain.cloud/";
     string serverUrl = "http://localhost:8585";
     string getAgentsEndpoint = "/getAgents";
-    string getObstaclesEndpoint = "/getObstacles";
     string getBoxesEndpoint = "/getBoxes";
+    string getObstaclesEndpoint = "/getObstacles";
     string getEndpointsEndpoint = "/getEndPoints";
     string sendConfigEndpoint = "/init";
     string updateEndpoint = "/update";
-
-    AgentsData agentsData;
-    ObstaclesData obstacleData;
-    BoxesData boxData;
-    EndPointsData endPointData;
+    AgentsData agentsData, obstacleData, boxData, endPointData;
     Dictionary<string, GameObject> agents, boxes;
     Dictionary<string, Vector3> prevPositions, currPositions, prevBoxPositions, currBoxPositions;
 
@@ -149,15 +51,15 @@ public class AgentController : MonoBehaviour
 
     public GameObject agentPrefab, obstaclePrefab, boxPrefab, endPointPrefab, floor;
     public int NAgents, NBoxes, NEndPoints, width, height;
-    public float timeToUpdate = 0.5f;
+    public float timeToUpdate = 5.0f;
     private float timer, dt;
 
     void Start()
     {
         agentsData = new AgentsData();
-        obstacleData = new ObstaclesData();
-        endPointData = new EndPointsData();
-        boxData = new BoxesData();
+        obstacleData = new AgentsData();
+        endPointData = new AgentsData();
+        boxData = new AgentsData();
 
         prevPositions = new Dictionary<string, Vector3>();
         currPositions = new Dictionary<string, Vector3>();
@@ -305,9 +207,11 @@ public class AgentController : MonoBehaviour
             Debug.Log(www.error);
         else 
         {
-            obstacleData = JsonUtility.FromJson<ObstaclesData>(www.downloadHandler.text);
+            obstacleData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
 
-            foreach(ObstacleData obstacle in obstacleData.positions)
+            Debug.Log(obstacleData.positions);
+
+            foreach(AgentData obstacle in obstacleData.positions)
             {
                 Instantiate(obstaclePrefab, new Vector3(obstacle.x, obstacle.y, obstacle.z), Quaternion.identity);
             }
@@ -322,26 +226,26 @@ public class AgentController : MonoBehaviour
             Debug.Log(www.error);
         else 
         {
-            boxData = JsonUtility.FromJson<BoxesData>(www.downloadHandler.text);
+            boxData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
             
-            foreach(BoxData box in boxData.positions)
+            foreach(AgentData box in boxData.positions)
             {
                 Vector3 newBoxPosition = new Vector3(box.x, box.y, box.z);
-                Debug.Log(boxData.positions);
-                if(!started)
-                {
-                    prevBoxPositions[box.id] = newBoxPosition;
-                    boxes[box.id] = Instantiate(boxPrefab, newBoxPosition, Quaternion.identity);
-                }
-                else
-                {
-                    //Compara los JSONS, si falta alguna de las cajas en el nuevo JSON eliminar la caja de unity
 
-                    // Vector3 currentBoxPosition = new Vector3();
-                    // if(currBoxPositions.TryGetValue(box.id, out currentBoxPosition))
-                    //     prevBoxPositions[box.id] = currentBoxPosition;
-                    // currBoxPositions[box.id] = newBoxPosition;
-                }
+                    if(!started)
+                    {
+                        prevBoxPositions[box.id] = newBoxPosition;
+                        boxes[box.id] = Instantiate(boxPrefab, newBoxPosition, Quaternion.identity);
+                    }
+                    else
+                    {
+                        //Compara los JSONS, si falta alguna de las cajas en el nuevo JSON eliminar la caja de unity
+
+                        // Vector3 currentBoxPosition = new Vector3();
+                        // if(currBoxPositions.TryGetValue(box.id, out currentBoxPosition))
+                        //     prevBoxPositions[box.id] = currentBoxPosition;
+                        // currBoxPositions[box.id] = newBoxPosition;
+                    }
             }
 
             updated = true;
@@ -358,11 +262,11 @@ public class AgentController : MonoBehaviour
             Debug.Log(www.error);
         else 
         {
-            endPointData = JsonUtility.FromJson<EndPointsData>(www.downloadHandler.text);
+            endPointData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
 
-            Debug.Log(www.downloadHandler.text);
+            Debug.Log(endPointData.positions);
 
-            foreach(EndPointData endPoint in endPointData.positions)
+            foreach(AgentData endPoint in endPointData.positions)
             {
                 Instantiate(endPointPrefab, new Vector3(endPoint.x, endPoint.y, endPoint.z), Quaternion.identity);
             }
