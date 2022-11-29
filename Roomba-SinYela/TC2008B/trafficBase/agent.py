@@ -16,7 +16,6 @@ class Car(Agent):
         """
          #Top Rigth Down Left
         self.pos = pos
-        self.directions = [4, 6, 3, 1]
         self.steps_taken = 0
         self.front = (self.pos[0]-1,self.pos[1]) 
         super().__init__(unique_id, model)
@@ -39,8 +38,8 @@ class Car(Agent):
                 elif agentR.direction == "Up":
                     newpos = (self.pos[0],self.pos[1]+1)
                     self.front = (self.pos[0],self.pos[1]+2) 
-                    
         return newpos
+
     def cambiarCarril(self,road):
         for agentR in road:
             if agentR.direction == "Right":
