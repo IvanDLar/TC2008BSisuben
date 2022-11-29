@@ -11,18 +11,21 @@ class RandomModel(Model):
         N: Number of agents in the simulation
     """
     def __init__(self, N):
-        self.num_agents = 5
+        self.num_agents = N
         dataDictionary = json.load(open("mapDictionary.json"))
-        
+        self.endPointsM = []
+        self.endPointAgents = []
+        self.endPointDict = {}
         self.traffic_lights = []
 
         with open('2022_base.txt') as baseFile:
             lines = baseFile.readlines()
-            self.width = len(lines[0])-1
+            self.width = len(lines[0])
             self.height = len(lines)
             self.grid = MultiGrid(self.width, self.height, torus = False) 
             self.schedule = RandomActivation(self)
-
+            
+        
             for r, row in enumerate(lines):
                 for c, col in enumerate(row):
                     if col in ["v", "^", ">", "<"]:
@@ -41,6 +44,11 @@ class RandomModel(Model):
                     elif col == "D":
                         agent = Destination(f"d_{r*self.width+c}", self)
                         self.grid.place_agent(agent, (c, self.height - r - 1))
+                        self.endPointsM.append((c, self.height - r - 1))
+                        self.endPointsM.append((c, self.height - r - 1))
+                        self.endPointAgents.append(agent)
+                        #Relate the position of a point to the eal specific object in the model
+                        self.endPointDict = dict(zip(self.endPointAgents, self.endPointsM))
 
         def cellList(posx, posy):
             road = self.grid.get_cell_list_contents((posx,posy))
@@ -75,7 +83,7 @@ class RandomModel(Model):
 
            
         for i in range(self.num_agents):
-            pos = (12,18)
+            pos = (22,15)
             a = Car(i+1000, self, pos) 
             self.schedule.add(a)
 
