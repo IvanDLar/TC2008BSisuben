@@ -21,6 +21,18 @@ class Car(Agent):
         self.steps_taken = 0
         self.front = (self.pos[0]-1,self.pos[1]) 
         super().__init__(unique_id, model)
+
+    def newposition(self):
+        roadList = []
+        neighborhood = self.model.grid.coord_iter()
+        for agentR in neighborhood:
+            for i in agentR[0]: 
+                if isinstance(i, Road):
+                    roadList.append(agentR)
+        agente = random.choice(roadList)
+        pos = (agente[1], agente[2])
+        return pos
+
         
     def roadCheck(self,road):
         for agentR in road:
@@ -216,7 +228,7 @@ class Car(Agent):
                 print("I AM GOING TO THE POINT")
                 print("-----------------")
                 self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(i.pos)])
-                self.model.grid.move_agent(self, (22, 0))
+                self.model.grid.move_agent(self, self.newposition())
                 
                
     def step(self):
