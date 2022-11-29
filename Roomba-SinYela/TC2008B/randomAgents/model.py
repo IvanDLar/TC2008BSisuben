@@ -36,11 +36,6 @@ class RandomModel(Model):
         # Creates the border of the grid height x width. The loop repeats while y and x are in range
         border = [(x,y) for y in range(height) for x in range(width) if y in [0, height - 1] or x in [0, width - 1]]
 
-        # Place an obstacle in every position in the border
-        for pos in border:
-            obs = ObstacleAgent(pos, self)
-            # self.schedule.add(obs)
-            self.grid.place_agent(obs, pos)
 
         # Add the agent to the 1,1 cell
         for i in range(self.num_agents):

@@ -35,7 +35,7 @@ class RandomAgent(Agent):
         isNear = []
         endPointsM = self.model.endPointsM
         endPointDictionary = self.model.endPointDict
-
+        stepsBFS = 0
         #Get the object of an endpoint using its value and get limit
         getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == endPointsM[0]}
         print("Endpoint dicitonary: ", next(iter(getEndPointKey)).limit)
@@ -160,13 +160,13 @@ class RandomAgent(Agent):
                     prev.append(prevList)
                     typeArray.append(rowList)
                     # To move left, right, up and down
-                delta_x = [-1, 1, 0, 0]
+                delta_x = [-1, 1, 0, 0] 
                 delta_y = [0, 0, 1, -1]
 
                 def valid(x, y):
                     if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
                         return False
-                    return (not isinstance(typeArray[x][y], ObstacleAgent) or not isinstance(typeArray[x][y], BoxAgent))
+                    return (not isinstance(typeArray[x][y], BoxAgent))
 
                 def solve(start, end):
                     Q = deque([start])
@@ -177,42 +177,57 @@ class RandomAgent(Agent):
                         curDist = dist[curPoint] #Gets the nums of levels it took to reach this node
                         if curPoint == end: #If we have found a mathc to the endpoint
                             path.append(curPoint)
-                            return [*set(path)], curDist
-                            
+                            return prev, curDist
+                        
                         for dx, dy in zip(delta_x, delta_y):
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
-                            if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys():
+                            if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
                                 continue
                             dist[nextPoint] = curDist + 1
                             
+                            Q.append(nextPoint) #Add the next unvisited node
+                            prev[nextPoint[0]][nextPoint[1]] = curPoint #Keep track of the parent node of the next node
                             path.append(curPoint)
 
                             # path.append((curPoint[0], curPoint[1])
-                            
-                            Q.append(nextPoint)
                             # prev[nextPoint[0]][nextPoint[1]] = curPoint
                     
                         
                 # print("Self pos: ", self.pos)
                 # print("Shortest Distance: ", shortestDistance)
                 def reconstructPath(s, e, prev):
+                    #Rebuild the path and invert it
                     path = []
-                    i = e
+                    at = e
                     print("Prev", prev)
-                    print("i", i)
-                    print(prev[0][prev[0].index(i)])
-                    while i != prev[0][prev[0].index(i)]:
-                        if i != 0:
-                            path.append(i)
+                    print(prev[0][at[0]][at[1]]) 
+                    for i in range(len(prev[0])):
+                        while at != 0:
+                            print("i", at)
+                            at = prev[0][at[0]][at[1]]
+                            path.append(at)
+                                
                     path.reverse()
-                    print("Path", path)
-                    if path[0] == s:
-                        return(path)
-                    return []
 
-                print("Solved: ", reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance)))
+                    path.pop(0) #Remove garbage data (if i remove the code, the BFS will break)
+                    path.append(e) #Add the goal at the end of the array
+
+                    if path[0] == s:
+                        return path
+                    else:
+                        return []
+                #print("Solved: ", reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance)))
                 #print("Solved: ", solve(self.pos, shortestDistance))  
                 
+                pathArray = reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance))
+
+                
+                
+                if self.pos != shortestDistance:
+                    print("Moving to: ",pathArray[stepsBFS], " Steps: ", stepsBFS)
+                    stepsBFS += 1
+                    self.model.grid.move_agent(self, pathArray[stepsBFS])
+                    
                 # R, C = self.model.grid.width, self.model.grid.height
                 # m = self.model.grid
                 # sr, sc = self.pos[0], self.pos[1] #Starting row and column values
