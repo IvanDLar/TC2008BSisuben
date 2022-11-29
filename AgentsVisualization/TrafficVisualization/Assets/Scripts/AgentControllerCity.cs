@@ -43,16 +43,18 @@ public class AgentControllerCity : MonoBehaviour
     AgentsData agentsData;
     Dictionary<string, GameObject> agents;
     Dictionary<string, Vector3> prevPositions, currPositions;
+    List<GameObject> prefabList = new List<GameObject>();
 
     bool updated = false, started = false;
 
-    public GameObject agentPrefab;
+    public GameObject agentPrefab1, agentPrefab2, agentPrefab3;
     public int NAgents;
     public float timeToUpdate = 5.0f;
     private float timer, dt;
 
     void Start()
     {
+
         agentsData = new AgentsData();
 
         prevPositions = new Dictionary<string, Vector3>();
@@ -150,8 +152,13 @@ public class AgentControllerCity : MonoBehaviour
 
                     if(!started)
                     {
+                        prefabList.Add(agentPrefab1);
+                        prefabList.Add(agentPrefab2);
+                        prefabList.Add(agentPrefab3);
+
+                        int prefabIndex = UnityEngine.Random.Range(0,3);
                         prevPositions[agent.id] = newAgentPosition;
-                        agents[agent.id] = Instantiate(agentPrefab, newAgentPosition, Quaternion.identity);
+                        agents[agent.id] = Instantiate(prefabList[prefabIndex], newAgentPosition, Quaternion.identity);
                     }
                     else
                     {

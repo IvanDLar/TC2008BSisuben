@@ -4,6 +4,10 @@ from mesa.space import MultiGrid
 from agent import *
 import json
 
+import random
+
+
+
 class RandomModel(Model):
     """ 
     Creates a new model with random agents.
@@ -11,7 +15,7 @@ class RandomModel(Model):
         N: Number of agents in the simulation
     """
     def __init__(self, N):
-        self.num_agents = 5
+        self.num_agents = 10
         dataDictionary = json.load(open("mapDictionary.json"))
         
         self.traffic_lights = []
@@ -75,11 +79,28 @@ class RandomModel(Model):
 
            
         for i in range(self.num_agents):
-            pos = (12,18)
-            a = Car(i+1000, self, pos) 
+            xrand = random.randrange(0,2)
+            yrand = random.randrange(0,24)
+            pos = (xrand, yrand)
+            # while (not self.grid.is_cell_empty(pos)):
+            #     xrand = random.randrange(0,24)
+            #     yrand = random.randrange(0,24)
+            #     pos = (xrand, yrand)
+            a = Car(i+1000, self, pos)
             self.schedule.add(a)
-
             self.grid.place_agent(a, pos)
+
+
+        # Add the dirt to a random empty grid cell
+        # for i in range(self.num_trash):
+        #     c = BoxAgent(i+5000,  
+        #     selfself).schedule.add(c)
+
+        #     pos_gen = lambda w, h: (self.random.randrange(w), self.random.randrange(h))
+        #     pos = pos_gen(self.grid.width, self.grid.height)
+        #     while (not self.grid.is_cell_empty(pos)):
+        #         pos = pos_gen(self.grid.width, self.grid.height)
+            # self.grid.place_agent(c, pos)
 
         self.running = True
 

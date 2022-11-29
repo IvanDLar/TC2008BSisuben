@@ -363,9 +363,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a119222d6eca54e82d19e2656bd80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentPrefab: {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
-  NAgents: 5
-  timeToUpdate: 2
+  agentPrefab1: {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
+  agentPrefab2: {fileID: 1206213241637111945, guid: b585096ef5453dd4ca8daa1ee4ccf17b, type: 3}
+  agentPrefab3: {fileID: 1834000435954972455, guid: cc61048c4accaaf438454f96b05c23a4, type: 3}
+  NAgents: 15
+  timeToUpdate: 0.5
 --- !u!850595691 &1515965292
 LightingSettings:
   m_ObjectHideFlags: 0
