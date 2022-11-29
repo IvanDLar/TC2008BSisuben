@@ -58,7 +58,6 @@ class RandomModel(Model):
             while (not self.grid.is_cell_empty(pos)):
                 pos = pos_gen(self.grid.width, self.grid.height)
             self.grid.place_agent(c, pos)
-            
         
         # Manually add the checkpoints to the grid 
         for i in range(self.num_points):
