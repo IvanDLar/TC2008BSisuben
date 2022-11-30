@@ -17,6 +17,7 @@ class RandomModel(Model):
         self.endPointAgents = []
         self.endPointDict = {}
         self.traffic_lights = []
+        self.roadList = []
 
         with open('2022_base.txt') as baseFile:
             lines = baseFile.readlines()
@@ -30,6 +31,7 @@ class RandomModel(Model):
                 for c, col in enumerate(row):
                     if col in ["v", "^", ">", "<"]:
                         agent = Road(f"r_{r*self.width+c}", self, dataDictionary[col])
+                        self.roadList.append((c, self.height - r - 1)) #Make a list of positions of Road
                         self.grid.place_agent(agent, (c, self.height - r - 1))
                     elif col in ["S", "s"]:
                         agent = Road(f"r_{r*self.width+c}", self, dataDictionary[col])
@@ -80,8 +82,7 @@ class RandomModel(Model):
                 road2 = cellList(i.pos[0],i.pos[1]-1) #Down
                 checkDirection(road, "Up", "Down", i.pos[0],i.pos[1], Road, road2)
                                         
-
-           
+       
         for i in range(self.num_agents):
             pos = (22,15)
             a = Car(i+1000, self, pos) 
