@@ -11,7 +11,7 @@ class RandomModel(Model):
         N: Number of agents in the simulation
     """
     def __init__(self, N):
-        self.num_agents = N
+        self.num_agents = 2
         dataDictionary = json.load(open("mapDictionary.json"))
         self.endPointsM = []
         self.endPointAgents = []
@@ -84,7 +84,7 @@ class RandomModel(Model):
                                         
        
         for i in range(self.num_agents):
-            pos = (22,15)
+            pos = (16,17)
             a = Car(i+1000, self, pos) 
             self.schedule.add(a)
 
