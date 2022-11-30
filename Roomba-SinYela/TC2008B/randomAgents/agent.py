@@ -161,7 +161,7 @@ class RandomAgent(Agent):
                     typeArray.append(rowList)
                     # To move left, right, up and down
                 delta_x = [-1, 1, 0, 0] 
-                delta_y = [0, 0, 1, -1]
+                delta_y = [0, 0, 1, 0]
 
                 def valid(x, y):
                     if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
@@ -180,6 +180,8 @@ class RandomAgent(Agent):
                             return prev, curDist
                         
                         for dx, dy in zip(delta_x, delta_y):
+                            print("dx: ", dx)
+                            print("dy: ", dy)
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
                             if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
                                 continue
