@@ -15,7 +15,7 @@ class RandomModel(Model):
         N: Number of agents in the simulation
     """
     def __init__(self, N):
-        self.num_agents = 10
+        self.num_agents = N
         dataDictionary = json.load(open("mapDictionary.json"))
         
         self.traffic_lights = []
