@@ -34,8 +34,12 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject semaphorePrefab;
     [SerializeField] int tileSize;
 
-    Transform reed;
-    
+    string serverUrl = "http://localhost:8585";
+    string getAgentsEndpoint = "/getAgents";
+    string getObstaclesEndpoint = "/getObstacles";
+    string getEndpointsEndpoint = "/getEndPoints";
+    string sendConfigEndpoint = "/init";
+    string updateEndpoint = "/update";
     
 
 
@@ -45,16 +49,6 @@ public class CityMaker : MonoBehaviour
     void Start()
     {
         MakeTiles(layout.text);
-
-        
-
-
-
-        // redLight.enabled = !redLight.enabled;
-
-
-
-
 
         // var textFile = Resources.Load<GameObject>("Assets/Prefabs/semaphore 1");
 
@@ -80,7 +74,6 @@ public class CityMaker : MonoBehaviour
         // timer = timeToUpdate;
 
         // StartCoroutine(SendConfiguration());
-        Light();
 
 
     }
@@ -91,38 +84,12 @@ public class CityMaker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        
-        
-        
-        
-        // redLight = GameObject.Find("red");
-        // Debug.Log(redLight);
-        // semaphorePrefab.transform.Find("red");
-
         // myRedLight.enabled = !myRedLight.enabled;
         // sema = gameObject.transform.Find("semaphore 1");
 
         // sema.transform.Find("red").GetComponentInChildren<Light>().enabled = false;
         
     }
-
-    IEnumerator seconds()
-    {
-        yield return new WaitForSeconds(2);
-    }
-
-    void Light()
-    {
-        semaphorePrefab.transform.Find("Red").gameObject.SetActive(true);
-        semaphorePrefab.transform.Find("Green").gameObject.SetActive(false);
-        StartCoroutine(seconds());
-        semaphorePrefab.transform.Find("Red").gameObject.SetActive(false);
-        semaphorePrefab.transform.Find("Green").gameObject.SetActive(false);
-        StartCoroutine(seconds());
-    }
-
-
 
     void MakeTiles(string tiles)
     {
@@ -131,8 +98,8 @@ public class CityMaker : MonoBehaviour
         // To draw from the top, find the rows of the file
         // and move down
         // Remove the last enter, and one more to start at 0
-        int y = tiles.Split('\n').Length - 1;
-       // Debug.Log(y);
+        int y = tiles.Split('\n').Length - 2;
+        Debug.Log(y);
 
         Vector3 position;
         GameObject tile;
@@ -181,5 +148,158 @@ public class CityMaker : MonoBehaviour
         }
 
     }
-}    
 
+
+    // IEnumerator UpdateSimulation()
+    // {
+    //     UnityWebRequest www = UnityWebRequest.Get(serverUrl + updateEndpoint);
+    //     yield return www.SendWebRequest();
+ 
+    //     if (www.result != UnityWebRequest.Result.Success)
+    //         Debug.Log(www.error);
+    //     else 
+    //     {
+    //         StartCoroutine(GetAgentsData());
+    //         StartCoroutine(GetBoxData()); 
+    //     }
+    // }
+
+//     IEnumerator SendConfiguration()
+//     {
+//         WWWForm form = new WWWForm();
+
+//         form.AddField("NAgents", NAgents.ToString());
+//         form.AddField("NBoxes", NBoxes.ToString());
+//         form.AddField("NEndPoints", NEndPoints.ToString());
+//         form.AddField("width", width.ToString());
+//         form.AddField("height", height.ToString());
+
+//         UnityWebRequest www = UnityWebRequest.Post(serverUrl + sendConfigEndpoint, form);
+//         www.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+//         yield return www.SendWebRequest();
+
+//         if (www.result != UnityWebRequest.Result.Success)
+//         {
+//             Debug.Log(www.error);
+//         }
+//         else
+//         {
+//             Debug.Log("Configuration upload complete!");
+//             Debug.Log("Getting Agents positions");
+//             StartCoroutine(GetAgentsData());
+//             StartCoroutine(GetObstacleData());
+//             StartCoroutine(GetBoxData());
+//             StartCoroutine(GetEndPointData());
+//         }
+//     }
+
+//     IEnumerator GetAgentsData() 
+//     {
+//         UnityWebRequest www = UnityWebRequest.Get(serverUrl + getAgentsEndpoint);
+//         yield return www.SendWebRequest();
+ 
+//         if (www.result != UnityWebRequest.Result.Success)
+//             Debug.Log(www.error);
+//         else 
+//         {
+//             agentsData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
+
+//             foreach(AgentData agent in agentsData.positions)
+//             {
+//                 Vector3 newAgentPosition = new Vector3(agent.x, agent.y, agent.z);
+
+//                     if(!started)
+//                     {
+//                         prevPositions[agent.id] = newAgentPosition;
+//                         agents[agent.id] = Instantiate(agentPrefab, newAgentPosition, Quaternion.identity);
+//                     }
+//                     else
+//                     {
+//                         Vector3 currentPosition = new Vector3();
+//                         if(currPositions.TryGetValue(agent.id, out currentPosition))
+//                             prevPositions[agent.id] = currentPosition;
+//                         currPositions[agent.id] = newAgentPosition;
+//                     }
+//             }
+
+//             //updated = true;
+//             //if(!started) started = true;
+//         }
+//     }
+
+//     IEnumerator GetObstacleData() 
+//     {
+//         UnityWebRequest www = UnityWebRequest.Get(serverUrl + getObstaclesEndpoint);
+//         yield return www.SendWebRequest();
+ 
+//         if (www.result != UnityWebRequest.Result.Success)
+//             Debug.Log(www.error);
+//         else 
+//         {
+//             obstacleData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
+
+//             Debug.Log(obstacleData.positions);
+
+//             foreach(AgentData obstacle in obstacleData.positions)
+//             {
+//                 Instantiate(obstaclePrefab, new Vector3(obstacle.x, obstacle.y, obstacle.z), Quaternion.identity);
+//             }
+//         }
+//     }
+//     IEnumerator GetBoxData() 
+//     {
+//         UnityWebRequest www = UnityWebRequest.Get(serverUrl + getBoxesEndpoint);
+//         yield return www.SendWebRequest();
+ 
+//         if (www.result != UnityWebRequest.Result.Success)
+//             Debug.Log(www.error);
+//         else 
+//         {
+//             boxData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
+            
+//             foreach(AgentData box in boxData.positions)
+//             {
+//                 Vector3 newBoxPosition = new Vector3(box.x, box.y, box.z);
+
+//                     if(!started)
+//                     {
+//                         prevBoxPositions[box.id] = newBoxPosition;
+//                         boxes[box.id] = Instantiate(boxPrefab, newBoxPosition, Quaternion.identity);
+//                     }
+//                     else
+//                     {
+//                         //Compara los JSONS, si falta alguna de las cajas en el nuevo JSON eliminar la caja de unity
+
+//                         // Vector3 currentBoxPosition = new Vector3();
+//                         // if(currBoxPositions.TryGetValue(box.id, out currentBoxPosition))
+//                         //     prevBoxPositions[box.id] = currentBoxPosition;
+//                         // currBoxPositions[box.id] = newBoxPosition;
+//                     }
+//             }
+
+//             updated = true;
+//             if(!started) started = true;
+//         }
+//     }
+
+//     IEnumerator GetEndPointData() 
+//     {
+//         UnityWebRequest www = UnityWebRequest.Get(serverUrl + getEndpointsEndpoint);
+//         yield return www.SendWebRequest();
+ 
+//         if (www.result != UnityWebRequest.Result.Success)
+//             Debug.Log(www.error);
+//         else 
+//         {
+//             endPointData = JsonUtility.FromJson<AgentsData>(www.downloadHandler.text);
+
+//             Debug.Log(endPointData.positions);
+
+//             foreach(AgentData endPoint in endPointData.positions)
+//             {
+//                 Instantiate(endPointPrefab, new Vector3(endPoint.x, endPoint.y, endPoint.z), Quaternion.identity);
+//             }
+//         }
+//     }
+}

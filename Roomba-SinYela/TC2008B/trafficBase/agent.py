@@ -189,6 +189,112 @@ class Car(Agent):
             self.pos,
             moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
             include_center=True)
+
+        # Checks which grid cells are empty
+        freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))      
+        # """ BFS BEARBONES"""
+        # typeArray = []
+        # prev = []
+        # path = []
+        # print("Height", self.model.grid.height)
+        # print("Width", self.model.grid.width)
+
+        # for i in range(self.model.grid.height):
+        #     rowList = []
+        #     prevList = []
+        #     for j in range(self.model.grid.width):
+        #         if(len(self.model.grid[i, j]) > 0):
+        #             rowList.append(self.model.grid[i, j][0])
+        #             prevList.append(0)
+        #         else:
+        #             rowList.append(self.model.grid[i, j])
+        #             prevList.append(0)
+        #     prev.append(prevList)
+        #     typeArray.append(rowList)
+        # # To move left, right, up and down, and diagonally
+        # delta_x = [-1, 1, 0, 0, 1, -1, -1, 1] 
+        # delta_y = [0, 0, 1, -1, -1, 1, -1, 1]
+
+        # def valid(x, y):
+        #     if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
+        #         return False
+        #     return (not isinstance(typeArray[x][y], Obstacle))
+
+        # def solve(start, end):
+        #     Q = deque([start])
+        #     print("Q: ", Q)
+        #     dist = {start: 0}
+        #     while len(Q):
+        #         curPoint = Q.popleft() #Move to one of the neighbors, remove visited
+        #         curDist = dist[curPoint] #Gets the nums of levels it took to reach this node
+        #         if curPoint == end: #If we have found a mathc to the endpoint
+        #             path.append(curPoint)
+        #             return prev, curDist
+                
+        #         for dx, dy in zip(delta_x, delta_y):
+        #             nextPoint = (0,0)
+        #             if isinstance(typeArray[curPoint[0]][curPoint[1]], Road):
+        #                 dir = (typeArray[curPoint[0]][curPoint[1]]).direction
+        #                 print("Current Point!:" ,(typeArray[curPoint[0]][curPoint[1]]).direction)
+        #                 if dir == "Up" and dy == 1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------TOP-----------------")
+        #                 elif dir == "Down" and dy == -1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------BOTTOM-----------------")
+        #                 elif dir == "Right" and dx == 1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------RIGHT-----------------")
+        #                 elif dir == "Left" and dx == -1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------LEFT-----------------")
+        #             elif isinstance(typeArray[curPoint[0]][curPoint[1]], Destination):
+        #                 nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                 break
+                    
+
+
+        #             if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
+        #                 continue
+        #             dist[nextPoint] = curDist + 1
+                    
+        #             Q.append(nextPoint) #Add the next unvisited node
+        #             prev[nextPoint[0]][nextPoint[1]] = curPoint #Keep track of the parent node of the next node
+        #             path.append(curPoint)
+
+        #             # path.append((curPoint[0], curPoint[1])
+        #             # prev[nextPoint[0]][nextPoint[1]] = curPoint
+            
+                
+        # # print("Self pos: ", self.pos)
+        # # print("Shortest Distance: ", shortestDistance)
+        # def reconstructPath(s, e, prev):
+        #     #Rebuild the path and invert it
+        #     path = []
+        #     at = e
+        #     # print("Prev", prev) Print preview of the rebuilded path
+        #     #print(prev[0][at[0]][at[1]]) 
+        #     for i in range(len(prev[0])):
+        #         while at != 0:
+        #             #print("i", at) where it is moving
+        #             at = prev[0][at[0]][at[1]]
+        #             path.append(at)
+                        
+        #     path.reverse()
+
+        #     path.pop(0) #Remove garbage data (if i remove the code, the BFS will break)
+        #     path.append(e) #Add the goal at the end of the array
+
+        #     if path[0] == s:
+        #         return path
+        #     else:
+        #         return []
+        # #print("Solved: ", reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance)))
+        # #print("Solved: ", solve(self.pos, shortestDistance))  
         
         """Movimineto Ejec"""
         finalPath = self.path
@@ -205,7 +311,6 @@ class Car(Agent):
         #         return
         #print("Final Path", finalPath)
         
-        #If the traffic light is red, dont move else move
         if self.pos != self.randPoint:
             for agentL in trafLight:
                 #print(trafLight)
@@ -214,6 +319,7 @@ class Car(Agent):
                         return
                 elif isinstance(agentL, Car):
                     return
+<<<<<<< HEAD
             #If next tile in the path has a car on top of it, re caulculate the BFS in order to avoid it
             if(isinstance(finalPath[self.stepsBFS], Car)):
                 self.path = self.BFS()
@@ -223,6 +329,13 @@ class Car(Agent):
                 #print("Steps: ", self.stepsBFS)
                 self.model.grid.move_agent(self, finalPath[self.stepsBFS])
                 #self.model.grid.move_agent(self, self.roadCheck(road))
+=======
+            print("Moving to: ",finalPath[self.stepsBFS], " Steps: ", self.stepsBFS)
+            self.stepsBFS += 1
+            print("Steps: ", self.stepsBFS)
+            self.model.grid.move_agent(self, finalPath[self.stepsBFS])
+            #self.model.grid.move_agent(self, self.roadCheck(road))        
+>>>>>>> parent of 1aa0ef43 (Merge branch 'main' into Ivan2)
         else:
             self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(self.randPoint)])
             newpos = random.choice(self.model.roadList)
