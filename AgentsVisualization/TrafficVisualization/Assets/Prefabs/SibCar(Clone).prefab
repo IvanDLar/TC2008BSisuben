@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 6115938645837083396}
   m_Layer: 0
   m_Name: SibCar(Clone)
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

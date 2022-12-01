@@ -8,6 +8,7 @@ TagManager:
   - EndPoint
   - GreenLight
   - RedLight
+  - Car
   layers:
   - Default
   - TransparentFX

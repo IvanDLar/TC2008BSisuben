@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; 
+using TMPro;
 
 
 // public class AgentData
@@ -43,7 +45,12 @@ public class CityMaker : MonoBehaviour
     List<GameObject> Semaphore_S = new List <GameObject>();
     
     bool state = false;
+
+    public TextMeshPro  textvalue;
     
+    private GameObject[] getCount;
+
+    int count;
     
 
 
@@ -55,6 +62,8 @@ public class CityMaker : MonoBehaviour
         MakeTiles(layout.text);
 
 
+    
+
     }
 
 
@@ -64,7 +73,9 @@ public class CityMaker : MonoBehaviour
     void Update()
     {
 
-
+        getCount = GameObject.FindGameObjectsWithTag ("Car");
+        count = getCount.Length;
+        textvalue.text = count.ToString();
         
     }
 
