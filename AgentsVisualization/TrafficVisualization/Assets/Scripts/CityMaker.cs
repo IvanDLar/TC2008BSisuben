@@ -32,6 +32,8 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject roadPrefab;
     [SerializeField] GameObject buildingPrefab1;
     [SerializeField] GameObject buildingPrefab;
+    [SerializeField] GameObject buildingPrefab2;
+    [SerializeField] GameObject buildingPrefab3;
     [SerializeField] GameObject semaphorePrefab;
     [SerializeField] GameObject parkingPrefab;
     [SerializeField] int tileSize;
@@ -130,6 +132,8 @@ public class CityMaker : MonoBehaviour
         int x = 0;
         prefabList.Add(buildingPrefab1);
         prefabList.Add(buildingPrefab);
+        prefabList.Add(buildingPrefab2);
+        prefabList.Add(buildingPrefab3);
         // Mesa has y 0 at the bottom
         // To draw from the top, find the rows of the file
         // and move down
@@ -168,11 +172,11 @@ public class CityMaker : MonoBehaviour
             } else if (tiles[i] == 'D') {
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(parkingPrefab, position, Quaternion.Euler(0, 90, 0));
-                // tile.GetComponent<Renderer>().materials[0].color = Color.red;
+                tile.GetComponent<Renderer>().materials[1].color = Color.red;
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == '#') {
-                int prefabIndex = UnityEngine.Random.Range(0,2);
+                int prefabIndex = UnityEngine.Random.Range(0,4);
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(prefabList[prefabIndex], position, Quaternion.identity);
                 // tile.transform.localScale = new Vector3(1, Random.Range(0.5f, 2.0f), 1);
