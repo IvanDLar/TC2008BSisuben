@@ -18,7 +18,7 @@ class RandomModel(Model):
         self.endPointDict = {}
         self.traffic_lights = []
         self.roadList = []
-        self.maxAgents = 1000
+        self.maxAgents = 100000
 
         with open('2022_base.txt') as baseFile:
             lines = baseFile.readlines()
@@ -97,7 +97,7 @@ class RandomModel(Model):
 
     def step(self):
         '''Advance the model by one step.'''
-        if self.schedule.steps % 20 == 0:
+        if self.schedule.steps % 1 == 0:
             if self.maxAgents > 0:
                 pos = self.random.choice(self.roadList)
                 a = Car(self.maxAgents, self, pos) 
