@@ -30,6 +30,7 @@ public class CityMaker : MonoBehaviour
 {
     [SerializeField] TextAsset layout;
     [SerializeField] GameObject roadPrefab;
+    [SerializeField] GameObject groundPrefab;
     [SerializeField] GameObject buildingPrefab1;
     [SerializeField] GameObject buildingPrefab;
     [SerializeField] GameObject buildingPrefab2;
@@ -178,6 +179,7 @@ public class CityMaker : MonoBehaviour
             } else if (tiles[i] == '#') {
                 int prefabIndex = UnityEngine.Random.Range(0,4);
                 position = new Vector3(x * tileSize, 0, y * tileSize);
+                tile = Instantiate(groundPrefab, position, Quaternion.identity);
                 tile = Instantiate(prefabList[prefabIndex], position, Quaternion.identity);
                 // tile.transform.localScale = new Vector3(1, Random.Range(0.5f, 2.0f), 1);
                 tile.transform.parent = transform;
