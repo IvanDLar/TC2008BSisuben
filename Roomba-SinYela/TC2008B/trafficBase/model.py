@@ -11,14 +11,15 @@ class RandomModel(Model):
         N: Number of agents in the simulation
     """
     def __init__(self, N): 
-        self.num_agents = 2 
+        self.num_agents = 10 
         dataDictionary = json.load(open("mapDictionary.json"))
         self.endPointsM = []
         self.endPointAgents = []
         self.endPointDict = {}
         self.traffic_lights = []
         self.roadList = []
-        self.maxAgents = 100000
+        self.maxAgents = 1000
+        self.currentAgents = 0
 
         with open('2022_base.txt') as baseFile:
             lines = baseFile.readlines()
@@ -84,12 +85,12 @@ class RandomModel(Model):
                 checkDirection(road, "Up", "Down", i.pos[0],i.pos[1], Road, road2)
                                         
        
-        if self.maxAgents > 0:
+        if self.currentAgents < self.maxAgents:
             for i in range(self.num_agents):
                 pos = self.random.choice(self.roadList)
-                a = Car(self.maxAgents, self, pos) 
+                a = Car(i, self, pos) 
                 self.schedule.add(a)
-                self.maxAgents -= 1
+                self.currentAgents += 1
 
                 self.grid.place_agent(a, pos)
 
@@ -98,11 +99,11 @@ class RandomModel(Model):
     def step(self):
         '''Advance the model by one step.'''
         if self.schedule.steps % 1 == 0:
-            if self.maxAgents > 0:
+            if self.currentAgents < self.maxAgents:
                 pos = self.random.choice(self.roadList)
-                a = Car(self.maxAgents, self, pos) 
+                a = Car(self.currentAgents, self, pos) 
                 self.schedule.add(a)
-                self.maxAgents -= 1
+                self.currentAgents += 1
 
                 self.grid.place_agent(a, pos)
                 
