@@ -236,6 +236,7 @@ class Car(Agent):
                         return
                 elif isinstance(agentL, Car):
                     return
+            #If next tile in the path has a car on top of it, re caulculate the BFS in order to avoid it
             if(isinstance(finalPath[self.stepsBFS], Car)):
                 self.path = self.BFS()
             else:
