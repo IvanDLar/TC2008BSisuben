@@ -30,10 +30,13 @@ public class CityMaker : MonoBehaviour
 {
     [SerializeField] TextAsset layout;
     [SerializeField] GameObject roadPrefab;
+    [SerializeField] GameObject buildingPrefab1;
     [SerializeField] GameObject buildingPrefab;
     [SerializeField] GameObject semaphorePrefab;
+    [SerializeField] GameObject parkingPrefab;
     [SerializeField] int tileSize;
 
+    List<GameObject> prefabList = new List <GameObject>();
     Transform reed;
     
     
@@ -45,8 +48,6 @@ public class CityMaker : MonoBehaviour
     void Start()
     {
         MakeTiles(layout.text);
-
-        
 
 
 
@@ -127,6 +128,8 @@ public class CityMaker : MonoBehaviour
     void MakeTiles(string tiles)
     {
         int x = 0;
+        prefabList.Add(buildingPrefab1);
+        prefabList.Add(buildingPrefab);
         // Mesa has y 0 at the bottom
         // To draw from the top, find the rows of the file
         // and move down
@@ -164,14 +167,15 @@ public class CityMaker : MonoBehaviour
                 x += 1;
             } else if (tiles[i] == 'D') {
                 position = new Vector3(x * tileSize, 0, y * tileSize);
-                tile = Instantiate(buildingPrefab, position, Quaternion.Euler(0, 90, 0));
-                tile.GetComponent<Renderer>().materials[0].color = Color.red;
+                tile = Instantiate(parkingPrefab, position, Quaternion.Euler(0, 90, 0));
+                // tile.GetComponent<Renderer>().materials[0].color = Color.red;
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == '#') {
+                int prefabIndex = UnityEngine.Random.Range(0,2);
                 position = new Vector3(x * tileSize, 0, y * tileSize);
-                tile = Instantiate(buildingPrefab, position, Quaternion.identity);
-                tile.transform.localScale = new Vector3(1, Random.Range(0.5f, 2.0f), 1);
+                tile = Instantiate(prefabList[prefabIndex], position, Quaternion.identity);
+                // tile.transform.localScale = new Vector3(1, Random.Range(0.5f, 2.0f), 1);
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == '\n') {
