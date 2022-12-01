@@ -174,13 +174,13 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  field of view: 69
+  orthographic: 1
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -200,7 +200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 136675311}
   m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
-  m_LocalPosition: {x: 12, y: 10, z: -1.5}
+  m_LocalPosition: {x: 12, y: 16, z: -1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -334,7 +334,7 @@ MonoBehaviour:
   layout: {fileID: 4900000, guid: 546eebda13596f54299b7bd7da78254f, type: 3}
   roadPrefab: {fileID: 3240343348373693069, guid: 646fc54ff3078ce94bbdbd0f0d4c4a05, type: 3}
   buildingPrefab: {fileID: 5785842104517340929, guid: 6e1571e774d0c41a8810486669f4340e, type: 3}
-  semaphorePrefab: {fileID: 6531651393276900204, guid: 6d05447c42fb94fe49cb068eb73aa9b9, type: 3}
+  semaphorePrefab: {fileID: 0}
   tileSize: 1
 --- !u!4 &1457529884
 Transform:
@@ -363,9 +363,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a119222d6eca54e82d19e2656bd80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentPrefab: {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
-  NAgents: 12
-  timeToUpdate: 2
+  agentPrefab1: {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
+  agentPrefab2: {fileID: 1206213241637111945, guid: b585096ef5453dd4ca8daa1ee4ccf17b, type: 3}
+  agentPrefab3: {fileID: 1834000435954972455, guid: cc61048c4accaaf438454f96b05c23a4, type: 3}
+  NAgents: 10
+  timeToUpdate: 0.5
 --- !u!850595691 &1515965292
 LightingSettings:
   m_ObjectHideFlags: 0

@@ -16,12 +16,138 @@ class Car(Agent):
             unique_id: The agent's ID
             model: Model reference for the agent
         """
+        super().__init__(unique_id, model)
          #Top Rigth Down Left
         self.pos = pos
         self.steps_taken = 0
         self.front = (self.pos[0]-1,self.pos[1]) 
-        super().__init__(unique_id, model)
+        self.randPoint = random.choice(self.model.endPointsM)
+        self.path = self.BFS()
+        self.stepsBFS = 0
         
+        
+    def BFS(self):
+        
+        """ BFS BEARBONES"""
+        typeArray = []
+        prev = []
+        path = []
+        rPoint = self.randPoint
+
+        print("Height", self.model.grid.height)
+        print("Width", self.model.grid.width)
+
+        for i in range(self.model.grid.height):
+            rowList = []
+            prevList = []
+            for j in range(self.model.grid.width):
+                if(len(self.model.grid[i, j]) > 0):
+                    rowList.append(self.model.grid[i, j][0])
+                    prevList.append(0)
+                else:
+                    rowList.append(self.model.grid[i, j])
+                    prevList.append(0)
+            prev.append(prevList)
+            typeArray.append(rowList)
+            # To move left, right, up and down, and diagonally
+        delta_x = [-1, 1, 0, 0, 1, -1, -1, 1] 
+        delta_y = [0, 0, 1, -1, -1, 1, -1, 1]
+
+        def valid(x, y):
+            if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
+                return False
+            return (not isinstance(typeArray[x][y], Obstacle))
+
+        def solve(start, end):
+            Q = deque([start])
+            print("Q: ", Q)
+            dist = {start: 0}
+            while len(Q):
+                curPoint = Q.popleft() #Move to one of the neighbors, remove visited
+                curDist = dist[curPoint] #Gets the nums of levels it took to reach this node
+                if curPoint == end: #If we have found a mathc to the endpoint
+                    path.append(curPoint)
+                    return prev, curDist
+                
+                for dx, dy in zip(delta_x, delta_y):
+                    nextPoint = (0,0)
+                    if isinstance(typeArray[curPoint[0]][curPoint[1]], Road):
+                        dir = (typeArray[curPoint[0]][curPoint[1]]).direction
+                        print("Current Point!:" ,(typeArray[curPoint[0]][curPoint[1]]).direction)
+                        if dir == "Up" and dy == 1:
+                            nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+                            # print("----------------TOP-----------------")
+                        elif dir == "Down" and dy == -1:
+                            nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+                            # print("----------------BOTTOM-----------------")
+                        elif dir == "Right" and dx == 1:
+                            nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+                            # print("----------------RIGHT-----------------")
+                        elif dir == "Left" and dx == -1:
+                            nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+                            # print("----------------LEFT-----------------")
+                    elif isinstance(typeArray[curPoint[0]][curPoint[1]], Destination):
+                        nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+                        break
+                    
+
+
+                    if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
+                        continue
+                    dist[nextPoint] = curDist + 1
+                    
+                    Q.append(nextPoint) #Add the next unvisited node
+                    prev[nextPoint[0]][nextPoint[1]] = curPoint #Keep track of the parent node of the next node
+                    path.append(curPoint)
+
+        def reconstructPath(s, e, prev):
+            #Rebuild the path and invert it
+            path = []
+            at = e
+            # print("Prev", prev) Print preview of the rebuilded path
+            #print(prev[0][at[0]][at[1]]) 
+            for i in range(len(prev[0])):
+                while at != 0:
+                    #print("i", at) where it is moving
+                    at = prev[0][at[0]][at[1]]
+                    path.append(at)
+                        
+            path.reverse()
+
+            path.pop(0) #Remove garbage data (if i remove the code, the BFS will break)
+            path.append(e) #Add the goal at the end of the array
+
+            if path[0] == s:
+                return path
+            else:
+                return []
+                    # path.append((curPoint[0], curPoint[1])
+                    # prev[nextPoint[0]][nextPoint[1]] = curPoint
+                    
+        return reconstructPath(self.pos, rPoint, solve(self.pos, rPoint))
+
+    def randomPoint(self):
+        """ Get End Points """
+        endPointsM = self.model.endPointsM
+        # endPointDictionary = self.model.endPointDict
+        return(random.choice(endPointsM))
+
+    def newFront(self, road):
+        for agentR in road:
+            if isinstance(agentR, Road):
+                if agentR.direction == "Right":
+                    self.front = (self.pos[0]+1,self.pos[1]) 
+                elif agentR.direction == "Left":
+                    self.front = (self.pos[0]-1,self.pos[1]) 
+                elif agentR.direction == "Down":
+                    self.front = (self.pos[0],self.pos[1]-1)     
+                elif agentR.direction == "Up":
+                    self.front = (self.pos[0],self.pos[1]+1) 
+    
     def roadCheck(self,road):
         for agentR in road:
             if isinstance(agentR, Road):
@@ -63,7 +189,7 @@ class Car(Agent):
         """ 
         Determines if the agent can move in the direction that was chosen
         """ 
-        stepsBFS = 0
+        # stepsBFS = 0
 
         """ Get End Points """
         endPointsM = self.model.endPointsM
@@ -71,31 +197,12 @@ class Car(Agent):
         listOfNeighboursPoints = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
         getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == endPointsM[0]}
         isNear = []
-
+        # print("---------------Get End Points-----------------")
+        # print(self.randomPoint())
         #Manhattan Distance
-        def getShortestDistance(endPoints, myX, myY):
-            #Aux array
-            distanceArray = []
-            for endPoint in endPoints:
-                endPointX = endPoint[0]
-                endPointY = endPoint[1]
-                print("X:", endPointX)
-                print("Y:", endPointY)
+        
 
-                distance = abs(myX - endPointX) + abs(myY - endPointY)
-                distanceArray.insert(0, distance)
-
-            closetsPoint = endPoints[distanceArray.index(max(distanceArray))]
-            print("End Points: ", endPoints)
-            print("Distance Array", distanceArray)
-
-
-            print("Closest index: ", distanceArray.index(max(distanceArray)))
-            print("Closest Point: ", closetsPoint)
-            return closetsPoint
-
-        shortestDistance = getShortestDistance(endPointsM, self.pos[0], self.pos[1]);
-
+        
         possible_steps = self.model.grid.get_neighborhood(
                 self.pos,
                 moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
@@ -106,119 +213,154 @@ class Car(Agent):
             include_center=True)
 
         # Checks which grid cells are empty
-        freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))
-                    
-        """ BFS BEARBONES"""
-        typeArray = []
-        prev = []
-        path = []
-        print("Height", self.model.grid.height)
-        print("Width", self.model.grid.width)
+        freeSpaces = list(map(self.model.grid.is_cell_empty, possible_steps))      
+        # """ BFS BEARBONES"""
+        # typeArray = []
+        # prev = []
+        # path = []
+        # print("Height", self.model.grid.height)
+        # print("Width", self.model.grid.width)
 
-        for i in range(self.model.grid.height):
-            rowList = []
-            prevList = []
-            for j in range(self.model.grid.width):
-                if(len(self.model.grid[i, j]) > 0):
-                    rowList.append(self.model.grid[i, j][0])
-                    prevList.append(0)
-                else:
-                    rowList.append(self.model.grid[i, j])
-                    prevList.append(0)
-            prev.append(prevList)
-            typeArray.append(rowList)
-            # To move left, right, up and down
-        delta_x = [-1, 1, 0, 0] 
-        delta_y = [0, 0, 1, -1]
+        # for i in range(self.model.grid.height):
+        #     rowList = []
+        #     prevList = []
+        #     for j in range(self.model.grid.width):
+        #         if(len(self.model.grid[i, j]) > 0):
+        #             rowList.append(self.model.grid[i, j][0])
+        #             prevList.append(0)
+        #         else:
+        #             rowList.append(self.model.grid[i, j])
+        #             prevList.append(0)
+        #     prev.append(prevList)
+        #     typeArray.append(rowList)
+        # # To move left, right, up and down, and diagonally
+        # delta_x = [-1, 1, 0, 0, 1, -1, -1, 1] 
+        # delta_y = [0, 0, 1, -1, -1, 1, -1, 1]
 
-        def valid(x, y):
-            if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
-                return False
-            return (not isinstance(typeArray[x][y], Obstacle))
+        # def valid(x, y):
+        #     if x < 0 or x >= len(typeArray) or y < 0 or y >= len(typeArray[x]):
+        #         return False
+        #     return (not isinstance(typeArray[x][y], Obstacle))
 
-        def solve(start, end):
-            Q = deque([start])
-            print("Q: ", Q)
-            dist = {start: 0}
-            while len(Q):
-                curPoint = Q.popleft() #Move to one of the neighbors, remove visited
-                curDist = dist[curPoint] #Gets the nums of levels it took to reach this node
-                if curPoint == end: #If we have found a mathc to the endpoint
-                    path.append(curPoint)
-                    return prev, curDist
+        # def solve(start, end):
+        #     Q = deque([start])
+        #     print("Q: ", Q)
+        #     dist = {start: 0}
+        #     while len(Q):
+        #         curPoint = Q.popleft() #Move to one of the neighbors, remove visited
+        #         curDist = dist[curPoint] #Gets the nums of levels it took to reach this node
+        #         if curPoint == end: #If we have found a mathc to the endpoint
+        #             path.append(curPoint)
+        #             return prev, curDist
                 
-                for dx, dy in zip(delta_x, delta_y):
-                    nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
-                    if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
-                        continue
-                    dist[nextPoint] = curDist + 1
+        #         for dx, dy in zip(delta_x, delta_y):
+        #             nextPoint = (0,0)
+        #             if isinstance(typeArray[curPoint[0]][curPoint[1]], Road):
+        #                 dir = (typeArray[curPoint[0]][curPoint[1]]).direction
+        #                 print("Current Point!:" ,(typeArray[curPoint[0]][curPoint[1]]).direction)
+        #                 if dir == "Up" and dy == 1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------TOP-----------------")
+        #                 elif dir == "Down" and dy == -1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------BOTTOM-----------------")
+        #                 elif dir == "Right" and dx == 1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------RIGHT-----------------")
+        #                 elif dir == "Left" and dx == -1:
+        #                     nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                     # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
+        #                     # print("----------------LEFT-----------------")
+        #             elif isinstance(typeArray[curPoint[0]][curPoint[1]], Destination):
+        #                 nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
+        #                 break
                     
-                    Q.append(nextPoint) #Add the next unvisited node
-                    prev[nextPoint[0]][nextPoint[1]] = curPoint #Keep track of the parent node of the next node
-                    path.append(curPoint)
 
-                    # path.append((curPoint[0], curPoint[1])
-                    # prev[nextPoint[0]][nextPoint[1]] = curPoint
+
+        #             if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
+        #                 continue
+        #             dist[nextPoint] = curDist + 1
+                    
+        #             Q.append(nextPoint) #Add the next unvisited node
+        #             prev[nextPoint[0]][nextPoint[1]] = curPoint #Keep track of the parent node of the next node
+        #             path.append(curPoint)
+
+        #             # path.append((curPoint[0], curPoint[1])
+        #             # prev[nextPoint[0]][nextPoint[1]] = curPoint
             
                 
-        # print("Self pos: ", self.pos)
-        # print("Shortest Distance: ", shortestDistance)
-        def reconstructPath(s, e, prev):
-            #Rebuild the path and invert it
-            path = []
-            at = e
-            # print("Prev", prev) Print preview of the rebuilded path
-            print(prev[0][at[0]][at[1]]) 
-            for i in range(len(prev[0])):
-                while at != 0:
-                    #print("i", at) where it is moving
-                    at = prev[0][at[0]][at[1]]
-                    path.append(at)
+        # # print("Self pos: ", self.pos)
+        # # print("Shortest Distance: ", shortestDistance)
+        # def reconstructPath(s, e, prev):
+        #     #Rebuild the path and invert it
+        #     path = []
+        #     at = e
+        #     # print("Prev", prev) Print preview of the rebuilded path
+        #     #print(prev[0][at[0]][at[1]]) 
+        #     for i in range(len(prev[0])):
+        #         while at != 0:
+        #             #print("i", at) where it is moving
+        #             at = prev[0][at[0]][at[1]]
+        #             path.append(at)
                         
-            path.reverse()
+        #     path.reverse()
 
-            path.pop(0) #Remove garbage data (if i remove the code, the BFS will break)
-            path.append(e) #Add the goal at the end of the array
+        #     path.pop(0) #Remove garbage data (if i remove the code, the BFS will break)
+        #     path.append(e) #Add the goal at the end of the array
 
-            if path[0] == s:
-                return path
-            else:
-                return []
-        #print("Solved: ", reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance)))
-        #print("Solved: ", solve(self.pos, shortestDistance))  
+        #     if path[0] == s:
+        #         return path
+        #     else:
+        #         return []
+        # #print("Solved: ", reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance)))
+        # #print("Solved: ", solve(self.pos, shortestDistance))  
         
-        pathArray = reconstructPath(self.pos, shortestDistance, solve(self.pos, shortestDistance))
-
+        """Movimineto Ejec"""
+        finalPath = self.path
+        road = self.model.grid.get_cell_list_contents(self.pos)
+        self.newFront(road)
+        trafLight = self.model.grid.get_cell_list_contents(self.front)
         
+        # for agentL in trafLight:
+        #     print(trafLight)
+        #     if isinstance(agentL, Traffic_Light):
+        #         if not agentL.state:
+        #             return
+        #     elif isinstance(agentL, Car):
+        #         return
+        print("Final Path", finalPath)
         
-        if self.pos != shortestDistance:
-            print("Moving to: ",pathArray[stepsBFS], " Steps: ", stepsBFS)
-            stepsBFS += 1
-            self.model.grid.move_agent(self, pathArray[stepsBFS])
-
+        if self.pos != self.randPoint:
+            for agentL in trafLight:
+                print(trafLight)
+                if isinstance(agentL, Traffic_Light):
+                    if not agentL.state:
+                        return
+                elif isinstance(agentL, Car):
+                    return
+            print("Moving to: ",finalPath[self.stepsBFS], " Steps: ", self.stepsBFS)
+            self.stepsBFS += 1
+            print("Steps: ", self.stepsBFS)
+            self.model.grid.move_agent(self, finalPath[self.stepsBFS])
+            #self.model.grid.move_agent(self, self.roadCheck(road))        
+        else:
+            self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(self.randPoint)])
+            newpos = random.choice(self.model.roadList)
+            if(isinstance(newpos, Car)):
+                newpos = random.choice(self.model.roadList)
+            self.model.grid.move_agent(self, newpos)
+            self.steps_taken = 0
+            self.front = (self.pos[0]-1,self.pos[1]) 
+            self.randPoint = random.choice(self.model.endPointsM)
+            self.path = self.BFS()
+            self.stepsBFS = 0
+            
         """ BFS BEARBONES """
 
-        road = self.model.grid.get_cell_list_contents(self.pos)
-        trafLight = self.model.grid.get_cell_list_contents(self.front)
-    
-        for agentL in trafLight:
-            if isinstance(agentL, Traffic_Light):
-                if not agentL.state:
-                    return
-            elif isinstance(agentL, Car):
-                return
-                    
-        
-        for i in listOfNeighboursPoints:
-            if isinstance(i, Destination):
-                print("Position: ", possible_end_points[possible_end_points.index(i.pos)])
-                print("-----------------")
-                print("I AM GOING TO THE POINT")
-                print("-----------------")
-                self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(i.pos)])
-                self.model.grid.move_agent(self, random.choice(self.model.roadList))
-                
-               
+
     def step(self):
         """ 
         Determines the new direction it will take, and then moves
