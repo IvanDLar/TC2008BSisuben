@@ -34,8 +34,8 @@ class Car(Agent):
         path = []
         rPoint = self.randPoint
 
-        print("Height", self.model.grid.height)
-        print("Width", self.model.grid.width)
+        #print("Height", self.model.grid.height)
+        #print("Width", self.model.grid.width)
 
         for i in range(self.model.grid.height):
             rowList = []
@@ -60,7 +60,7 @@ class Car(Agent):
 
         def solve(start, end):
             Q = deque([start])
-            print("Q: ", Q)
+            #print("Q: ", Q)
             dist = {start: 0}
             while len(Q):
                 curPoint = Q.popleft() #Move to one of the neighbors, remove visited
@@ -73,7 +73,7 @@ class Car(Agent):
                     nextPoint = (0,0)
                     if isinstance(typeArray[curPoint[0]][curPoint[1]], Road):
                         dir = (typeArray[curPoint[0]][curPoint[1]]).direction
-                        print("Current Point!:" ,(typeArray[curPoint[0]][curPoint[1]]).direction)
+                        #print("Current Point!:" ,(typeArray[curPoint[0]][curPoint[1]]).direction)
                         if dir == "Up" and dy == 1:
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
                             # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
@@ -184,27 +184,7 @@ class Car(Agent):
 
 
     def move(self):
-        """ 
-        Determines if the agent can move in the direction that was chosen
-        """ 
-        # stepsBFS = 0
-
         """ Get End Points """
-        endPointsM = self.model.endPointsM
-        endPointDictionary = self.model.endPointDict
-        listOfNeighboursPoints = self.model.grid.get_neighbors(self.pos, moore = True, include_center = True, radius = 1)
-        getEndPointKey = {i for i in endPointDictionary if endPointDictionary[i] == endPointsM[0]}
-        isNear = []
-        # print("---------------Get End Points-----------------")
-        # print(self.randomPoint())
-        #Manhattan Distance
-        
-
-        
-        possible_steps = self.model.grid.get_neighborhood(
-                self.pos,
-                moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
-            )
         possible_end_points = self.model.grid.get_neighborhood(
             self.pos,
             moore=True, # Boolean for whether to use Moore neighborhood (including diagonals) or Von Neumann (only up/down/left/right).
@@ -223,12 +203,12 @@ class Car(Agent):
         #             return
         #     elif isinstance(agentL, Car):
         #         return
-        print("Final Path", finalPath)
+        #print("Final Path", finalPath)
         
         #If the traffic light is red, dont move else move
         if self.pos != self.randPoint:
             for agentL in trafLight:
-                print(trafLight)
+                #print(trafLight)
                 if isinstance(agentL, Traffic_Light):
                     if not agentL.state:
                         return
@@ -238,9 +218,9 @@ class Car(Agent):
             if(isinstance(finalPath[self.stepsBFS], Car)):
                 self.path = self.BFS()
             else:
-                print("Moving to: ",finalPath[self.stepsBFS], " Steps: ", self.stepsBFS)
+                #print("Moving to: ",finalPath[self.stepsBFS], " Steps: ", self.stepsBFS)
                 self.stepsBFS += 1
-                print("Steps: ", self.stepsBFS)
+                #print("Steps: ", self.stepsBFS)
                 self.model.grid.move_agent(self, finalPath[self.stepsBFS])
                 #self.model.grid.move_agent(self, self.roadCheck(road))
         else:
@@ -248,12 +228,9 @@ class Car(Agent):
             newpos = random.choice(self.model.roadList)
             if(isinstance(newpos, Car)):
                 newpos = random.choice(self.model.roadList)
-            self.model.grid.move_agent(self, newpos)
-            self.steps_taken = 0
-            self.front = (self.pos[0]-1,self.pos[1]) 
-            self.randPoint = random.choice(self.model.endPointsM)
-            self.path = self.BFS()
-            self.stepsBFS = 0
+            self.model.schedule.remove(self)
+            self.model.grid.remove_agent(self)
+            
             
         """ BFS BEARBONES """
 
