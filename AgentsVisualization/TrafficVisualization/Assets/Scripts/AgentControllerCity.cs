@@ -1,4 +1,4 @@
-﻿// TC2008B. Sistemas Multiagentes y Gráficas Computacionales
+﻿    // TC2008B. Sistemas Multiagentes y Gráficas Computacionales
 // C# client to interact with Python. Based on the code provided by Sergio Ruiz.
 // Octavio Navarro. October 2021
 
@@ -93,8 +93,8 @@ public class AgentControllerCity : MonoBehaviour
                 if(direction != Vector3.zero) agents[agent.Key].transform.rotation = Quaternion.LookRotation(direction);
             }
 
-            // float t = (timer / timeToUpdate);
-            // dt = t * t * ( 3f - 2f*t);
+            float t = (timer / timeToUpdate);
+            dt = t * t * ( 3f - 2f*t);
         }
     }
  

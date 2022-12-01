@@ -50,40 +50,6 @@ public class CityMaker : MonoBehaviour
         MakeTiles(layout.text);
 
 
-
-        // redLight.enabled = !redLight.enabled;
-
-
-
-
-
-        // var textFile = Resources.Load<GameObject>("Assets/Prefabs/semaphore 1");
-
-        // semaphorePrefab = GameObject.Find("red");
-        // myRedLight = redLight.GetComponentInChildren<Light>();
-
-        // agentsData = new AgentsData();
-        // obstacleData = new AgentsData();
-        // endPointData = new AgentsData();
-
-        // prevPositions = new Dictionary<string, Vector3>();
-        // currPositions = new Dictionary<string, Vector3>();
-
-        // // prevBoxPositions = new Dictionary<string, Vector3>();
-        // // currBoxPositions = new Dictionary<string, Vector3>();
-
-        // agents = new Dictionary<string, GameObject>();
-        // // boxes = new Dictionary<string, GameObject>();
-
-        // floor.transform.localScale = new Vector3((float)width/10, 1, (float)height/10);
-        // floor.transform.localPosition = new Vector3((float)width/2-0.5f, 0, (float)height/2-0.5f);
-        
-        // timer = timeToUpdate;
-
-        // StartCoroutine(SendConfiguration());
-        Light();
-
-
     }
 
 
@@ -93,35 +59,29 @@ public class CityMaker : MonoBehaviour
     void Update()
     {
 
-        
-        
-        
-        
-        // redLight = GameObject.Find("red");
-        // Debug.Log(redLight);
-        // semaphorePrefab.transform.Find("red");
 
-        // myRedLight.enabled = !myRedLight.enabled;
-        // sema = gameObject.transform.Find("semaphore 1");
-
-        // sema.transform.Find("red").GetComponentInChildren<Light>().enabled = false;
         
     }
 
     IEnumerator seconds()
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(20);
     }
 
-    void Light()
+    void Light_s()
     {
+        semaphorePrefab.transform.Find("Red").gameObject.SetActive(false);
+        semaphorePrefab.transform.Find("Green").gameObject.SetActive(true);
+    }
+
+    void Light_S()
+    {
+
         semaphorePrefab.transform.Find("Red").gameObject.SetActive(true);
         semaphorePrefab.transform.Find("Green").gameObject.SetActive(false);
-        StartCoroutine(seconds());
-        semaphorePrefab.transform.Find("Red").gameObject.SetActive(false);
-        semaphorePrefab.transform.Find("Green").gameObject.SetActive(false);
-        StartCoroutine(seconds());
+
     }
+
 
 
 
@@ -152,19 +112,23 @@ public class CityMaker : MonoBehaviour
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == 's') {
+                Light_s();
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(roadPrefab, position, Quaternion.identity);
                 tile.transform.parent = transform;
                 tile = Instantiate(semaphorePrefab, position, Quaternion.identity);
                 tile.transform.parent = transform;
                 x += 1;
+                
             } else if (tiles[i] == 'S') {
+                Light_S();
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(roadPrefab, position, Quaternion.Euler(0, 90, 0));
                 tile.transform.parent = transform;
                 tile = Instantiate(semaphorePrefab, position, Quaternion.Euler(0, 90, 0));
                 tile.transform.parent = transform;
                 x += 1;
+                
             } else if (tiles[i] == 'D') {
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(parkingPrefab, position, Quaternion.Euler(0, 90, 0));
