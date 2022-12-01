@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -335,6 +335,8 @@ MonoBehaviour:
   roadPrefab: {fileID: 3240343348373693069, guid: 646fc54ff3078ce94bbdbd0f0d4c4a05, type: 3}
   buildingPrefab1: {fileID: 3713604359152404247, guid: 85fcff9c328a54382bbb601293c7e07d, type: 3}
   buildingPrefab: {fileID: 5785842104517340929, guid: 6e1571e774d0c41a8810486669f4340e, type: 3}
+  buildingPrefab2: {fileID: 7927177487889830167, guid: 797bb132b58484a9b818fa9b57a6eb76, type: 3}
+  buildingPrefab3: {fileID: 2555166481714863076, guid: 993937f96379c42a196351ab5405a8fb, type: 3}
   semaphorePrefab: {fileID: 6755535695848638497, guid: dc83e51266278704fa0946e219e59d36, type: 3}
   parkingPrefab: {fileID: 653449904767041262, guid: d9b3e940ce5da42f380af94e3ef5d20c, type: 3}
   tileSize: 1
@@ -365,9 +367,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a119222d6eca54e82d19e2656bd80b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentPrefab1: {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
-  agentPrefab2: {fileID: 1206213241637111945, guid: b585096ef5453dd4ca8daa1ee4ccf17b, type: 3}
-  agentPrefab3: {fileID: 1834000435954972455, guid: cc61048c4accaaf438454f96b05c23a4, type: 3}
+  prefabList:
+  - {fileID: 1787035746284086686, guid: e53792a0da33dab47a1eecd48f54b871, type: 3}
+  - {fileID: 1834000435954972455, guid: cc61048c4accaaf438454f96b05c23a4, type: 3}
+  - {fileID: 1206213241637111945, guid: b585096ef5453dd4ca8daa1ee4ccf17b, type: 3}
   NAgents: 15
   timeToUpdate: 0.5
 --- !u!850595691 &1515965292

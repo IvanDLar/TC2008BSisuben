@@ -1,4 +1,4 @@
-﻿    // TC2008B. Sistemas Multiagentes y Gráficas Computacionales
+﻿// TC2008B. Sistemas Multiagentes y Gráficas Computacionales
 // C# client to interact with Python. Based on the code provided by Sergio Ruiz.
 // Octavio Navarro. October 2021
 
@@ -43,11 +43,10 @@ public class AgentControllerCity : MonoBehaviour
     AgentsData agentsData;
     Dictionary<string, GameObject> agents;
     Dictionary<string, Vector3> prevPositions, currPositions;
-    List<GameObject> prefabList = new List<GameObject>();
 
     bool updated = false, started = false;
 
-    public GameObject agentPrefab1, agentPrefab2, agentPrefab3;
+    public GameObject [] prefabList;
     public int NAgents;
     public float timeToUpdate = 5.0f;
     private float timer, dt;
@@ -60,11 +59,17 @@ public class AgentControllerCity : MonoBehaviour
         prevPositions = new Dictionary<string, Vector3>();
         currPositions = new Dictionary<string, Vector3>();
 
-        agents = new Dictionary<string, GameObject>();
+        agents = new Dictionary<string, GameObject>(); //Car agent lists 
         
         timer = timeToUpdate;
 
         StartCoroutine(SendConfiguration());
+    }
+
+    void newCar(string id, Vector3 newAgentPosition){
+        int prefabIndex = UnityEngine.Random.Range(0,prefabList.Length);
+        prevPositions[id] = newAgentPosition;
+        agents[id] = Instantiate(prefabList[prefabIndex], newAgentPosition, Quaternion.identity);
     }
 
     private void Update() 
@@ -78,12 +83,18 @@ public class AgentControllerCity : MonoBehaviour
 
         if (updated)
         {
+            
             timer -= Time.deltaTime;
             dt = 1.0f - (timer / timeToUpdate);
 
             foreach(var agent in currPositions)
             {
                 Vector3 currentPosition = agent.Value;
+
+                if(!prevPositions.ContainsKey(agent.Key)){
+                    newCar(agent.Key, currentPosition);
+                }
+
                 Vector3 previousPosition = prevPositions[agent.Key];
 
                 Vector3 interpolated = Vector3.Lerp(previousPosition, currentPosition, dt);
@@ -93,8 +104,8 @@ public class AgentControllerCity : MonoBehaviour
                 if(direction != Vector3.zero) agents[agent.Key].transform.rotation = Quaternion.LookRotation(direction);
             }
 
-            float t = (timer / timeToUpdate);
-            dt = t * t * ( 3f - 2f*t);
+            // float t = (timer / timeToUpdate);
+            // dt = t * t * ( 3f - 2f*t);
         }
     }
  
@@ -152,13 +163,8 @@ public class AgentControllerCity : MonoBehaviour
 
                     if(!started)
                     {
-                        prefabList.Add(agentPrefab1);
-                        prefabList.Add(agentPrefab2);
-                        prefabList.Add(agentPrefab3);
 
-                        int prefabIndex = UnityEngine.Random.Range(0,3);
-                        prevPositions[agent.id] = newAgentPosition;
-                        agents[agent.id] = Instantiate(prefabList[prefabIndex], newAgentPosition, Quaternion.identity);
+                        newCar(agent.id, newAgentPosition);
                     }
                     else
                     {
@@ -166,6 +172,7 @@ public class AgentControllerCity : MonoBehaviour
                         if(currPositions.TryGetValue(agent.id, out currentPosition))
                             prevPositions[agent.id] = currentPosition;
                         currPositions[agent.id] = newAgentPosition;
+                        
                     }
             }
 
