@@ -34,8 +34,10 @@ public class CityMaker : MonoBehaviour
     [SerializeField] GameObject roadPrefab;
     [SerializeField] GameObject buildingPrefab1;
     [SerializeField] GameObject buildingPrefab;
+    [SerializeField] GameObject buildingPrefab5;
     [SerializeField] GameObject buildingPrefab2;
     [SerializeField] GameObject buildingPrefab3;
+    [SerializeField] GameObject buildingPrefab4;
     [SerializeField] GameObject semaphorePrefab;
     [SerializeField] GameObject parkingPrefab;
     [SerializeField] int tileSize;
@@ -117,6 +119,8 @@ public class CityMaker : MonoBehaviour
         prefabList.Add(buildingPrefab);
         prefabList.Add(buildingPrefab2);
         prefabList.Add(buildingPrefab3);
+        prefabList.Add(buildingPrefab4);
+        prefabList.Add(buildingPrefab5);
         // Mesa has y 0 at the bottom
         // To draw from the top, find the rows of the file
         // and move down
@@ -165,7 +169,7 @@ public class CityMaker : MonoBehaviour
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == '#') {
-                int prefabIndex = UnityEngine.Random.Range(0,4);
+                int prefabIndex = UnityEngine.Random.Range(0,6);
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(prefabList[prefabIndex], position, Quaternion.identity);
                 // tile.transform.localScale = new Vector3(1, Random.Range(0.5f, 2.0f), 1);
