@@ -91,7 +91,7 @@ class RandomModel(Model):
                 a = Car(i, self, pos) 
                 self.schedule.add(a)
                 self.currentAgents += 1
-
+                
                 self.grid.place_agent(a, pos)
 
         self.running = True
@@ -101,10 +101,11 @@ class RandomModel(Model):
         if self.schedule.steps % 1 == 0:
             if self.currentAgents < self.maxAgents:
                 pos = self.random.choice(self.roadList)
+                print("Number of Cars: ",self.currentAgents)
                 a = Car(self.currentAgents, self, pos) 
                 self.schedule.add(a)
                 self.currentAgents += 1
-
+                
                 self.grid.place_agent(a, pos)
                 
         if self.schedule.steps % 10 == 0:
