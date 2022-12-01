@@ -94,8 +94,6 @@ class Car(Agent):
                         nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
                         break
                     
-
-
                     if not valid(nextPoint[0], nextPoint[1]) or nextPoint in dist.keys(): #Node within boundaries, and not of type obstacle and not visited
                         continue
                     dist[nextPoint] = curDist + 1
