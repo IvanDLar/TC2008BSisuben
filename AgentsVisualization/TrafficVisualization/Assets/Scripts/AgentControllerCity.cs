@@ -51,9 +51,18 @@ public class AgentControllerCity : MonoBehaviour
     public int NAgents;
     public float timeToUpdate = 5.0f;
     private float timer, dt;
+    int stepCounter = 0;
+
+
+    public GameObject City;
+
+    CityMaker citymaker;
+
+
 
     void Start()
     {
+        citymaker = City.GetComponent<CityMaker>();
 
         agentsData = new AgentsData();
 
@@ -69,11 +78,17 @@ public class AgentControllerCity : MonoBehaviour
 
     private void Update() 
     {
+    
         if(timer < 0)
         {
             timer = timeToUpdate;
             updated = false;
             StartCoroutine(UpdateSimulation());
+            stepCounter++;
+            if(stepCounter % 10 == 0)
+            {
+                citymaker.switchLight();
+            }
         }
 
         if (updated)

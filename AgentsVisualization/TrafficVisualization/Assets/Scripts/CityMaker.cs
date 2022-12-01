@@ -39,7 +39,10 @@ public class CityMaker : MonoBehaviour
     [SerializeField] int tileSize;
 
     List<GameObject> prefabList = new List <GameObject>();
-    Transform reed;
+    List<GameObject> Semaphore_s = new List <GameObject>();
+    List<GameObject> Semaphore_S = new List <GameObject>();
+    
+    bool state = false;
     
     
 
@@ -70,18 +73,27 @@ public class CityMaker : MonoBehaviour
         yield return new WaitForSeconds(20);
     }
 
-    void Light_s()
+    void Light_s(GameObject sem, bool state)
     {
-        semaphorePrefab.transform.Find("Red").gameObject.SetActive(false);
-        semaphorePrefab.transform.Find("Green").gameObject.SetActive(true);
+        sem.transform.Find("Red").gameObject.SetActive(state);
+        sem.transform.Find("Green").gameObject.SetActive(!state);
     }
 
-    void Light_S()
+    public void switchLight()
     {
 
-        semaphorePrefab.transform.Find("Red").gameObject.SetActive(true);
-        semaphorePrefab.transform.Find("Green").gameObject.SetActive(false);
+        foreach(var sem in Semaphore_s)
+        {
+            Light_s(sem, state);
+            
+        }
 
+        foreach(var sem in Semaphore_S)
+        {
+            Light_s(sem, !state);
+        }
+
+        state = !state;
     }
 
 
@@ -116,20 +128,22 @@ public class CityMaker : MonoBehaviour
                 tile.transform.parent = transform;
                 x += 1;
             } else if (tiles[i] == 's') {
-                Light_s();
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(roadPrefab, position, Quaternion.identity);
                 tile.transform.parent = transform;
                 tile = Instantiate(semaphorePrefab, position, Quaternion.identity);
+                Light_s(tile, true);
+                Semaphore_s.Add(tile);
                 tile.transform.parent = transform;
                 x += 1;
                 
             } else if (tiles[i] == 'S') {
-                Light_S();
                 position = new Vector3(x * tileSize, 0, y * tileSize);
                 tile = Instantiate(roadPrefab, position, Quaternion.Euler(0, 90, 0));
                 tile.transform.parent = transform;
                 tile = Instantiate(semaphorePrefab, position, Quaternion.Euler(0, 90, 0));
+                Light_s(tile, false);
+                Semaphore_S.Add(tile);
                 tile.transform.parent = transform;
                 x += 1;
                 
