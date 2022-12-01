@@ -228,9 +228,14 @@ class Car(Agent):
             newpos = random.choice(self.model.roadList)
             if(isinstance(newpos, Car)):
                 newpos = random.choice(self.model.roadList)
-            self.model.schedule.remove(self)
-            self.model.grid.remove_agent(self)
-            
+            # self.model.schedule.remove(self)
+            # self.model.grid.remove_agent(self)
+            self.model.grid.move_agent(self, newpos)
+            self.steps_taken = 0
+            self.front = (self.pos[0]-1,self.pos[1]) 
+            self.randPoint = random.choice(self.model.endPointsM)
+            self.path = self.BFS()
+            self.stepsBFS = 0
             
         """ BFS BEARBONES """
 
