@@ -144,6 +144,18 @@ public class CityMaker : MonoBehaviour
 
         Vector3 position;
         GameObject tile;
+        
+        for (int i=0; i<tiles.Length; i++) {
+            if (tiles[i] == '#') {
+                position = new Vector3(x * tileSize, 0, y * tileSize);
+                tile = Instantiate(groundPrefab, position, Quaternion.identity);
+                tile.transform.parent = transform;
+                x += 1;
+            }else if (tiles[i] == '\n') {
+                x = 0;
+                y -= 1;
+            }
+        }
 
         for (int i=0; i<tiles.Length; i++) {
             if (tiles[i] == '>' || tiles[i] == '<') {
@@ -179,7 +191,7 @@ public class CityMaker : MonoBehaviour
             } else if (tiles[i] == '#') {
                 int prefabIndex = UnityEngine.Random.Range(0,4);
                 position = new Vector3(x * tileSize, 0, y * tileSize);
-                tile = Instantiate(groundPrefab, position, Quaternion.identity);
+                // tile = Instantiate(groundPrefab, position, Quaternion.identity);
                 tile = Instantiate(prefabList[prefabIndex], position, Quaternion.identity);
                 // tile.transform.localScale = new Vector3(1, Random.Range(0.5f, 2.0f), 1);
                 tile.transform.parent = transform;
