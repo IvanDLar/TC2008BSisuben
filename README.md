@@ -25,3 +25,19 @@ Repo para el bloque de 5to semestre TC2008B
 - Buscar la escena RandomAgents en la carpeta Scenes
 - Mientras este corriendo el servidor poner play y ver el juego
 <br/>
+
+## Proyecto Final
+**Cargar servidor de mesa**
+<br>
+- Entrar a las carpetas ReactiveAgents/trafficBase
+- Correr en la terminal server.py **Asegurarse que no sea server2.py (Ese es la visualización en mesa)**
+<br/>
+
+**Cargar Unity**
+<br> 
+- Abrir el proyecto de TrafficVisualization en Unity
+- Buscar la escena BuildCity en la carpeta Scenes
+- Asegurarse que los prefabs (Se encuentran en la carpeta UsedPrefabs) de la siguiente forma
+
+- Mientras este corriendo el servidor poner play y ver el juego
+<br/>
