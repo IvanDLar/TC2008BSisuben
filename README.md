@@ -53,10 +53,8 @@ Repo para el bloque de 5to semestre TC2008B
 <br> 
 - Entrar a la carpeta de ReactiveAgents/trafficBase
 - Ejecutar el serverMesa.py
+- Los agentes en morado son los carros, mientras los agentes color verde son sus destinos.
 <br/>
-<br>
-Los agentes en morado son los carros, mientras los agentes color verde son sus destinos.
-<br/>
-<br>
+
+
 **Notas:** La carpeta de TestFiles contiene los archivos que se utilizaron en la fabricación del juego pero no quedaron en el proyecto final.
-<br/>
