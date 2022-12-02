@@ -196,15 +196,6 @@ class Car(Agent):
         self.newFront(road)
         trafLight = self.model.grid.get_cell_list_contents(self.front)
         
-        # for agentL in trafLight:
-        #     print(trafLight)
-        #     if isinstance(agentL, Traffic_Light):
-        #         if not agentL.state:
-        #             return
-        #     elif isinstance(agentL, Car):
-        #         return
-        #print("Final Path", finalPath)
-        
         #If the traffic light is red, dont move else move
         if self.pos != self.randPoint:
             for agentL in trafLight:
@@ -220,9 +211,7 @@ class Car(Agent):
             else:
                 #print("Moving to: ",finalPath[self.stepsBFS], " Steps: ", self.stepsBFS)
                 self.stepsBFS += 1
-                #print("Steps: ", self.stepsBFS)
                 self.model.grid.move_agent(self, finalPath[self.stepsBFS])
-                #self.model.grid.move_agent(self, self.roadCheck(road))
         else:
             self.model.grid.move_agent(self, possible_end_points[possible_end_points.index(self.randPoint)])
             newpos = random.choice(self.model.roadList)
