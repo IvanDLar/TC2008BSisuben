@@ -34,8 +34,6 @@ class Car(Agent):
         path = []
         rPoint = self.randPoint
 
-        #print("Height", self.model.grid.height)
-        #print("Width", self.model.grid.width)
 
         for i in range(self.model.grid.height):
             rowList = []
@@ -49,7 +47,7 @@ class Car(Agent):
                     prevList.append(0)
             prev.append(prevList)
             typeArray.append(rowList)
-            # To move left, right, up and down, and diagonally
+        # To move left, right, up and down, and diagonally
         delta_x = [-1, 1, 0, 0, 1, -1, -1, 1] 
         delta_y = [0, 0, 1, -1, -1, 1, -1, 1]
 
@@ -60,7 +58,6 @@ class Car(Agent):
 
         def solve(start, end):
             Q = deque([start])
-            #print("Q: ", Q)
             dist = {start: 0}
             while len(Q):
                 curPoint = Q.popleft() #Move to one of the neighbors, remove visited
@@ -73,23 +70,14 @@ class Car(Agent):
                     nextPoint = (0,0)
                     if isinstance(typeArray[curPoint[0]][curPoint[1]], Road):
                         dir = (typeArray[curPoint[0]][curPoint[1]]).direction
-                        #print("Current Point!:" ,(typeArray[curPoint[0]][curPoint[1]]).direction)
                         if dir == "Up" and dy == 1:
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
-                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
-                            # print("----------------TOP-----------------")
                         elif dir == "Down" and dy == -1:
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
-                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
-                            # print("----------------BOTTOM-----------------")
                         elif dir == "Right" and dx == 1:
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
-                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
-                            # print("----------------RIGHT-----------------")
                         elif dir == "Left" and dx == -1:
                             nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
-                            # print("Object type: ", typeArray[nextPoint[0]][nextPoint[1]])
-                            # print("----------------LEFT-----------------")
                     elif isinstance(typeArray[curPoint[0]][curPoint[1]], Destination):
                         nextPoint = (curPoint[0] + dx, curPoint[1] + dy)
                         break
@@ -106,11 +94,8 @@ class Car(Agent):
             #Rebuild the path and invert it
             path = []
             at = e
-            # print("Prev", prev) Print preview of the rebuilded path
-            #print(prev[0][at[0]][at[1]]) 
             for i in range(len(prev[0])):
                 while at != 0:
-                    #print("i", at) where it is moving
                     at = prev[0][at[0]][at[1]]
                     path.append(at)
                         
@@ -123,15 +108,12 @@ class Car(Agent):
                 return path
             else:
                 return []
-                    # path.append((curPoint[0], curPoint[1])
-                    # prev[nextPoint[0]][nextPoint[1]] = curPoint
                     
         return reconstructPath(self.pos, rPoint, solve(self.pos, rPoint))
 
     def randomPoint(self):
         """ Get End Points """
         endPointsM = self.model.endPointsM
-        # endPointDictionary = self.model.endPointDict
         return(random.choice(endPointsM))
 
     def newFront(self, road):
@@ -146,42 +128,6 @@ class Car(Agent):
                 elif agentR.direction == "Up":
                     self.front = (self.pos[0],self.pos[1]+1) 
     
-    def roadCheck(self,road):
-        for agentR in road:
-            if isinstance(agentR, Road):
-                if agentR.direction == "Right":
-                    newpos = (self.pos[0]+1,self.pos[1])
-                    self.front = (self.pos[0]+2,self.pos[1]) 
-                    
-                elif agentR.direction == "Left":
-                    newpos = (self.pos[0]-1,self.pos[1])
-                    self.front = (self.pos[0]-2,self.pos[1]) 
-                    
-                elif agentR.direction == "Down":
-                    newpos = (self.pos[0],self.pos[1]-1)
-                    self.front = (self.pos[0],self.pos[1]-2) 
-                    
-                elif agentR.direction == "Up":
-                    newpos = (self.pos[0],self.pos[1]+1)
-                    self.front = (self.pos[0],self.pos[1]+2) 
-        return newpos
-
-    def cambiarCarril(self,road):
-        for agentR in road:
-            if agentR.direction == "Right":
-                self.pos = (self.pos[0]+1,self.pos[1]-1)
-                
-            elif agentR.direction == "Left":
-                newpos = (self.pos[0]-1,self.pos[1])
-                
-            elif agentR.direction == "Down":
-                newpos = (self.pos[0],self.pos[1]-1)
-                
-            elif agentR.direction == "Up":
-                newpos = (self.pos[0],self.pos[1]+1)
-                    
-        return newpos
-
 
     def move(self):
         """ Get End Points """
@@ -199,7 +145,6 @@ class Car(Agent):
         #If the traffic light is red, dont move else move
         if self.pos != self.randPoint:
             for agentL in trafLight:
-                #print(trafLight)
                 if isinstance(agentL, Traffic_Light):
                     if not agentL.state:
                         return
@@ -209,7 +154,6 @@ class Car(Agent):
             if(isinstance(finalPath[self.stepsBFS], Car)):
                 self.path = self.BFS()
             else:
-                #print("Moving to: ",finalPath[self.stepsBFS], " Steps: ", self.stepsBFS)
                 self.stepsBFS += 1
                 self.model.grid.move_agent(self, finalPath[self.stepsBFS])
         else:
@@ -217,8 +161,6 @@ class Car(Agent):
             newpos = random.choice(self.model.roadList)
             if(isinstance(newpos, Car)):
                 newpos = random.choice(self.model.roadList)
-            # self.model.schedule.remove(self)
-            # self.model.grid.remove_agent(self)
             self.model.grid.move_agent(self, newpos)
             self.steps_taken = 0
             self.front = (self.pos[0]-1,self.pos[1]) 
@@ -258,8 +200,6 @@ class Traffic_Light(Agent):
         """ 
         To change the state (green or red) of the traffic light in case you consider the time to change of each traffic light.
         """
-        # if self.model.schedule.steps % self.timeToChange == 0:
-        #     self.state = not self.state
         pass
 
 class Destination(Agent):
