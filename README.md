@@ -37,7 +37,7 @@ Repo para el bloque de 5to semestre TC2008B
 <br> 
 - Abrir el proyecto de TrafficVisualization en Unity
 - Buscar la escena BuildCity en la carpeta Scenes
-- Asegurarse que los prefabs (Se encuentran en la carpeta UsedPrefabs) de la siguiente forma
-
+- Asegurarse que los prefabs esten en el lugar correcto.(Se encuentran en la carpeta UsedPrefabs)
+<img src="https://github.com/IvanDLar/TC2008BSisuben/blob/main/img/Screen%20Shot%202022-12-02%20at%2013.35.33.png?raw=true"> <img/>
 - Mientras este corriendo el servidor poner play y ver el juego
 <br/>
