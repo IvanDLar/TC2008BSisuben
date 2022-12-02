@@ -98,7 +98,7 @@ class RandomModel(Model):
 
     def step(self):
         '''Advance the model by one step.'''
-        if self.schedule.steps % 5 == 0:
+        if self.schedule.steps % 8 == 0:
             if self.currentAgents < self.maxAgents:
                 pos = self.random.choice(self.roadList)
                 print("Number of Cars: ",self.currentAgents)
