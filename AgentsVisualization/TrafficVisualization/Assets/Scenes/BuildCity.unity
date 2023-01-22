@@ -907,6 +907,7 @@ MonoBehaviour:
   Cams:
   - {fileID: 136675311}
   - {fileID: 1272567805}
+  - {fileID: 493643697}
 --- !u!850595691 &1515965292
 LightingSettings:
   m_ObjectHideFlags: 0

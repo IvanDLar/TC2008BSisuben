@@ -9,7 +9,7 @@ public class Camaras : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        InvokeRepeating("proyectCamaras",10,10);
+        InvokeRepeating("proyectCamaras",5,5);
     }
 
     // Update is called once per frame
